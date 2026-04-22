@@ -1,0 +1,49 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: ${RABBITMQ_CONTAINER_NAME}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin_user
+      RABBITMQ_DEFAULT_PASS: admin_pass
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+
+  fastapi:
+    build:
+      context: ./api
+    container_name: ${FASTAPI_CONTAINER_NAME}
+    ports:
+      - "8000:8000"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=admin_user
+      - RABBITMQ_PASS=admin_pass
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./api:/app
+    env_file:
+      - .env
+
+  worker:
+    build:
+      context: ./worker
+    container_name: ${WORKER_CONTAINER_NAME}
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=admin_user
+      - RABBITMQ_PASS=admin_pass
+    volumes:
+      - ./worker:app
+    env_file:
+      - .env
+
+volumes:
+  rabbitmq_data:
+
+
