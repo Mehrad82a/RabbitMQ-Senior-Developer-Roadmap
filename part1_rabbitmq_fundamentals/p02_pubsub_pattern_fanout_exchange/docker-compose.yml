@@ -1,7 +1,7 @@
+
 services:
   rabbitmq:
-#    image: rabbitmq:3.11-management
-    image: docker.arvancloud.ir/rabbitmq:latest
+    image: rabbitmq:3.11-management
     container_name: ${RABBITMQ_CONTAINER_NAME}
     ports:
       - "5672:5672"
@@ -11,6 +11,7 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
+
 
   fastapi:
     build:
@@ -29,24 +30,38 @@ services:
     env_file:
       - .env
 
-  worker:
+  email_worker:
     build:
       context: ./worker
-    container_name: ${WORKER_CONTAINER_NAME}
+    container_name: ${EMAIL_WORKER_CONTAINER_NAME}
+    command: python consumer_email.py
     depends_on:
       - rabbitmq
     environment:
-      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
       - ./worker:/app
-      - ./api:/app/api   # Mount the api folder inside /app/api
+    env_file:
+      - .env
+
+
+  sms_worker:
+    build:
+      context: ./worker
+    container_name: ${SMS_WORKER_CONTAINER_NAME}
+    command: python consumer_sms.py
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - ./worker:/app
     env_file:
       - .env
 
 volumes:
   rabbitmq_data:
-
-
