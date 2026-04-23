@@ -1,15 +1,13 @@
 import json, pika
-from part1_rabbitmq_fundamentals.p01_basic_queue.api.rabbitmq_connection import RabbitMQConnection
+from rabbitmq_connection import RabbitMQConnection
 
-
-
-rabbitmq = RabbitMQConnection()
-connection = rabbitmq.get_connection()
-channel = rabbitmq.get_channel()
 
 queue_name = 'tasks'
 
 def send_to_queue(data: dict):
+    rabbitmq = RabbitMQConnection()
+    channel = rabbitmq.connect()
+
     channel.queue_declare(queue=queue_name, durable=True)
 
     task = json.dumps(data)
@@ -22,7 +20,6 @@ def send_to_queue(data: dict):
     )
 
     print(f'[x] Sent task: {task}')
-    connection.close()
 
 
 
