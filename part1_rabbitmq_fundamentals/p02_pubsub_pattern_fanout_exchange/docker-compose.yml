@@ -1,3 +1,4 @@
+
 services:
   rabbitmq:
     image: rabbitmq:3.11-management
@@ -10,6 +11,7 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
+
 
   fastapi:
     build:
@@ -28,10 +30,11 @@ services:
     env_file:
       - .env
 
-  worker:
+  email_worker:
     build:
       context: ./worker
-    container_name: ${WORKER_CONTAINER_NAME}
+    container_name: ${EMAIL_WORKER_CONTAINER_NAME}
+    command: python consumer_email.py
     depends_on:
       - rabbitmq
     environment:
@@ -39,11 +42,26 @@ services:
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
-      - ./worker:app
+      - ./worker:/app
+    env_file:
+      - .env
+
+
+  sms_worker:
+    build:
+      context: ./worker
+    container_name: ${SMS_WORKER_CONTAINER_NAME}
+    command: python consumer_sms.py
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - ./worker:/app
     env_file:
       - .env
 
 volumes:
   rabbitmq_data:
-
-

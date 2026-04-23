@@ -1,4 +1,4 @@
-import pika, sys, os , json , time
+import pika, sys, json , time
 from part1_rabbitmq_fundamentals.p01_basic_queue.api.rabbitmq_connection import RabbitMQConnection
 
 
@@ -14,11 +14,11 @@ def main():
             connection = rabbitmq.get_connection()
             print('Connected to RabbitMQ successfully.')
         except pika.exceptions.AMQPConnectionError:
-            print('Failed to connect to RabbitMQ. Retrying in 5 seconds...')
+            print('Failed to connect to RabbitMQ. Retrying in 3 seconds...')
             time.sleep(3)
 
     queue_name = 'tasks'
-    channel.queue_declare(queu=queue_name, durable=True)
+    channel.queue_declare(queue=queue_name, durable=True)
 
     def callback(ch, method, properties, body):
         data = json.loads(body)

@@ -12,6 +12,6 @@ class Task(BaseModel):
 
 
 @app.post('/send-task/')
-def send_task(data: Task, background_tasks: BackgroundTasks):
-    background_tasks.add_task(send_to_queue, data.dict())
-    return {'status': 'success', 'data': data}
+def send_task(task: Task, background_tasks: BackgroundTasks):
+    background_tasks.add_task(send_to_queue, task.dict())
+    return {'status': 'Task sent', 'task': task}
