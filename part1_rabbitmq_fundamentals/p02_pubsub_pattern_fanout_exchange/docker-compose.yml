@@ -1,7 +1,8 @@
 
 services:
   rabbitmq:
-    image: rabbitmq:3.11-management
+#    image: rabbitmq:3.11-management
+    image: docker.arvancloud.ir/rabbitmq:latest
     container_name: ${RABBITMQ_CONTAINER_NAME}
     ports:
       - "5672:5672"
@@ -38,11 +39,13 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
       - ./worker:/app
+      - ./api:/app/api   # Mount the api folder inside /app/api
     env_file:
       - .env
 
@@ -55,11 +58,13 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
       - ./worker:/app
+      - ./api:/app/api   # Mount the api folder inside /app/api
     env_file:
       - .env
 

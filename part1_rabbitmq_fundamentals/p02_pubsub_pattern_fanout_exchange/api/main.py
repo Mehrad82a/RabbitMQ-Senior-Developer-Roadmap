@@ -1,5 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
+from producer import publish_event
 
 
 app = FastAPI()
@@ -12,4 +13,5 @@ class Event(BaseModel):
 
 @app.post("/broadcast-event")
 def broadcast_event(event: Event, background_tasks: BackgroundTasks):
-    return {'status': 'Broadcast sent', 'event': event.dict()}
+    background_tasks.add_task(publish_event, event.dict())
+    return {'status': 'Broadcast sent', 'event': event}
