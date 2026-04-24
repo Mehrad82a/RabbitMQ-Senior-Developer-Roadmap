@@ -1,4 +1,3 @@
-
 services:
   rabbitmq:
 #    image: rabbitmq:3.11-management
@@ -12,7 +11,6 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
-
 
   fastapi:
     build:
@@ -31,11 +29,11 @@ services:
     env_file:
       - .env
 
-  email_worker:
+  info_worker:
     build:
       context: ./worker
-    container_name: ${EMAIL_WORKER_CONTAINER_NAME}
-    command: python consumer_email.py
+    container_name: ${INFO_WORKER_CONTAINER_NAME}
+    command: python consumer_info.py
     depends_on:
       - rabbitmq
     environment:
@@ -50,11 +48,11 @@ services:
       - .env
 
 
-  sms_worker:
+  warning_worker:
     build:
       context: ./worker
-    container_name: ${SMS_WORKER_CONTAINER_NAME}
-    command: python consumer_sms.py
+    container_name: ${WARNING_WORKER_CONTAINER_NAME}
+    command: python consumer_warning.py
     depends_on:
       - rabbitmq
     environment:
@@ -67,6 +65,45 @@ services:
       - ./api:/app/api   # Mount the api folder inside /app/api
     env_file:
       - .env
+
+
+  error_worker:
+    build:
+      context: ./worker
+    container_name: ${ERROR_WORKER_CONTAINER_NAME}
+    command: python consumer_error.py
+    depends_on:
+      - rabbitmq
+    environment:
+      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - ./worker:/app
+      - ./api:/app/api   # Mount the api folder inside /app/api
+    env_file:
+      - .env
+
+  log_router:
+    build:
+      context: ./worker
+    container_name: ${LOG_ROUTER_CONTAINER_NAME}
+    command: python log_router.py
+    depends_on:
+      - rabbitmq
+    environment:
+      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - ./worker:/app
+      - ./api:/app/api   # Mount the api folder inside /app/api
+    env_file:
+      - .env
+
+
 
 volumes:
   rabbitmq_data:
