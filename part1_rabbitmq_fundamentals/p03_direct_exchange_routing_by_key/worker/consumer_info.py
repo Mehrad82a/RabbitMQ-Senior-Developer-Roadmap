@@ -2,29 +2,28 @@ import sys, time, json
 from api.rabbitmq_connection import RabbitMQConnection
 
 
-
-
-
 def main():
     rabbitmq = RabbitMQConnection()
     channel = rabbitmq.connect()
 
-    channel.exchange_declare(exchange='logs', exchange_type='fanout')
+    channel.exchange_declare(exchange='direct_logs', exchange_type='direct')
 
-    # Each subscriber gets a unique queue (by exclusive=True)
-    result = channel.queue_declare(queue='', exclusive=True)
-    queue_name = result.method.queue
+    queue_name = 'info_logs'
+
+    # Each worker connects to its direct queue
+    channel.queue_declare(queue=queue_name, durable=True)
 
     # Bind queue to exchange
-    channel.queue_bind(exchange='logs', queue=queue_name)
-    print(f"[SMS Service] Waiting for events on queue: '{queue_name}'...")
+    channel.queue_bind(exchange='direct_logs', queue=queue_name, routing_key='info')
+
+    print(f"[INFO Service] Waiting for info messages on queue: '{queue_name}'...")
 
     def callback(ch, method, properties, body):
         data = json.loads(body)
 
-        print(f'[SMS Service] Received event; sending email for: {data}')
+        print(f'[INFO Service] Received info; sending message for: {data}')
         time.sleep(3)  # For work simulation
-        print(f'[SMS Service] Done')
+        print(f'[INFO Service] Done')
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -38,3 +37,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Interrupted')
         sys.exit(0)
+
