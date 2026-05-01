@@ -4,13 +4,13 @@ from rabbitmq_connection import RabbitMQConnection
 
 queue_name = 'tasks'
 
-def send_to_queue(data: dict):
+def send_to_queue(task: dict):
     rabbitmq = RabbitMQConnection()
     channel = rabbitmq.connect()
 
     channel.queue_declare(queue=queue_name, durable=True)
 
-    task = json.dumps(data)
+    task = json.dumps(task)
 
     channel.basic_publish(
         exchange='',

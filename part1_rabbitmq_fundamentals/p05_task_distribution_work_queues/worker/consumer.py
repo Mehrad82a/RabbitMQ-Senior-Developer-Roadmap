@@ -1,27 +1,32 @@
-import sys, json , time
+import sys, time, json
 from api.rabbitmq_connection import RabbitMQConnection
+
+
 
 def main():
     rabbitmq = RabbitMQConnection()
     channel = rabbitmq.connect()
 
-    queue_name = 'tasks'
-    channel.queue_declare(queue=queue_name, durable=True)
+    channel.queue_declare(queue='work_queue', durable=True)
+    channel.basic_qos(prefetch_count=1)   # Fair dispatch
+
+    print('[Worker] Waiting for tasks...')
+
 
     def callback(ch, method, properties, body):
-        data = json.loads(body)
+        task = json.loads(body)
 
-        print(f'Worker received: {data}')
+        print(f'[Worker] received task: {task}')
         time.sleep(3)   # For work simulation
-        print('Worker task completed')
+        print('[Worker] Done')
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue=queue_name, on_message_callback=callback)
 
-    print('waiting for message...')
+    channel.basic_consume(queue='work_queue', on_message_callback=callback)
     channel.start_consuming()
+
+
 
 if __name__ == '__main__':
     try:
@@ -29,4 +34,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Interrupted')
         sys.exit(0)
-

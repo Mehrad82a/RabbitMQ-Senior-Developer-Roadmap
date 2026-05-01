@@ -1,4 +1,4 @@
-import pika, json
+import json
 from typing import Dict, Any
 from rabbitmq_connection import RabbitMQConnection
 

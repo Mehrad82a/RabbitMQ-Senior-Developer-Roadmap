@@ -22,7 +22,10 @@ def main():
 
         print(f'[ORDER Service] Received: {method.routing_key} -> {data}')
         time.sleep(3)  # For work simulation
-        print(f'[ORDER Service] Done')
+        print('[ORDER Service] Done')
+
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+
 
     channel.basic_consume(queue=queue_name, on_message_callback=callback)
     channel.start_consuming()

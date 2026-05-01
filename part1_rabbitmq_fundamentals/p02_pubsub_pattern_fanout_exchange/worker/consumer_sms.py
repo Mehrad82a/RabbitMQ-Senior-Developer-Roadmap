@@ -24,7 +24,7 @@ def main():
 
         print(f'[SMS Service] Received event; sending email for: {data}')
         time.sleep(3)  # For work simulation
-        print(f'[SMS Service] Done')
+        print('[SMS Service] Done')
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
