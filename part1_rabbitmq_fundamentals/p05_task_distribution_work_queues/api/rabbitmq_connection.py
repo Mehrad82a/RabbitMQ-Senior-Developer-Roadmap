@@ -13,10 +13,10 @@ class RabbitMQConnection:
 
     def __init__(self):
         if self._initialized: return
-        self.rabbitmq_host = os.getenv("RABBITMQ_HOST", "rabbitmq")
-        self.rabbitmq_port = int(os.getenv("RABBITMQ_PORT", 5672))
-        self.rabbitmq_user = os.getenv("RABBITMQ_USER", "admin_user")
-        self.rabbitmq_pass = os.getenv("RABBITMQ_PASS", "admin_pass")
+        self.rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+        self.rabbitmq_port = int(os.getenv('RABBITMQ_PORT', 5672))
+        self.rabbitmq_user = os.getenv('RABBITMQ_USER', 'admin_user')
+        self.rabbitmq_pass = os.getenv('RABBITMQ_PASS', 'admin_pass')
 
         self.connection = None
         self.channel = None
@@ -44,4 +44,6 @@ class RabbitMQConnection:
 
         return self.channel
 
-
+    def close(self):
+        if self.connection and self.connection.is_open:
+            self.connection.close()
