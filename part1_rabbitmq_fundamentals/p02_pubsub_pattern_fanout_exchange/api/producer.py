@@ -1,4 +1,4 @@
-import pika, json
+import json
 from rabbitmq_connection import RabbitMQConnection
 
 

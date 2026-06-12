@@ -35,7 +35,7 @@ def main():
         print(f'[ROUTER] Received message: {data}')
         process_log(data)
         time.sleep(3)  # For work simulation
-        print(f'[ROUTER] Done')
+        print('[ROUTER] Done')
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 

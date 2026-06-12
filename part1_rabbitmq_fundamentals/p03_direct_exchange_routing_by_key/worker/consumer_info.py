@@ -23,7 +23,7 @@ def main():
 
         print(f'[INFO Service] Received info; sending message for: {data}')
         time.sleep(3)  # For work simulation
-        print(f'[INFO Service] Done')
+        print('[INFO Service] Done')
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
