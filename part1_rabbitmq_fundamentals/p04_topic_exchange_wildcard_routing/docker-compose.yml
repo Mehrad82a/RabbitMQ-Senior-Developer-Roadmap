@@ -14,10 +14,11 @@ services:
 
   fastapi:
     build:
-      context: ./api
+      context: .
     container_name: ${FASTAPI_CONTAINER_NAME}
     ports:
       - "8000:8000"
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
@@ -25,15 +26,15 @@ services:
     depends_on:
       - rabbitmq
     volumes:
-      - ./api:/app
+      - .:/app
     env_file:
       - .env
 
   user_worker:
     build:
-      context: ./worker
+      context: .
     container_name: ${USER_WORKER_CONTAINER_NAME}
-    command: python consumer_user.py
+    command: python worker/consumer_user.py
     depends_on:
       - rabbitmq
     environment:
@@ -42,17 +43,16 @@ services:
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
-      - ./worker:/app
-      - ./api:/app/api   # Mount the api folder inside /app/api
+      - .:/app
     env_file:
       - .env
 
 
   order_worker:
     build:
-      context: ./worker
+      context: .
     container_name: ${ORDER_WORKER_CONTAINER_NAME}
-    command: python consumer_order.py
+    command: python worker/consumer_order.py
     depends_on:
       - rabbitmq
     environment:
@@ -61,17 +61,16 @@ services:
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
-      - ./worker:/app
-      - ./api:/app/api   # Mount the api folder inside /app/api
+      - .:/app
     env_file:
       - .env
 
 
   error_worker:
     build:
-      context: ./worker
+      context: .
     container_name: ${ERROR_WORKER_CONTAINER_NAME}
-    command: python consumer_error.py
+    command: python worker/consumer_error.py
     depends_on:
       - rabbitmq
     environment:
@@ -80,8 +79,7 @@ services:
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
-      - ./worker:/app
-      - ./api:/app/api   # Mount the api folder inside /app/api
+      - .:/app
     env_file:
       - .env
 

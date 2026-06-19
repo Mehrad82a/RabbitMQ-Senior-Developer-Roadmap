@@ -1,4 +1,6 @@
 services:
+
+
   rabbitmq:
 #    image: rabbitmq:3.11-management
     image: docker.arvancloud.ir/rabbitmq:latest
@@ -11,6 +13,7 @@ services:
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
+
 
   fastapi:
     build:
@@ -30,13 +33,14 @@ services:
     env_file:
       - .env
 
-  worker:
+
+  image_worker:
     build:
       context: .
-    container_name: ${WORKER_CONTAINER_NAME}
+    container_name: ${IMAGE_WORKER_CONTAINER_NAME}
+    command: python worker/image_worker.py
     depends_on:
       - rabbitmq
-    command: python worker/consumer.py
     environment:
       - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
       - RABBITMQ_HOST=${RABBITMQ_HOST}
@@ -47,7 +51,43 @@ services:
     env_file:
       - .env
 
+
+  email_worker:
+    build:
+      context: .
+    container_name: ${EMAIL_WORKER_CONTAINER_NAME}
+    command: python worker/email_worker.py
+    depends_on:
+      - rabbitmq
+    environment:
+      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
+
+  report_worker:
+    build:
+      context: .
+    container_name: ${REPORT_WORKER_CONTAINER_NAME}
+    command: python worker/report_worker.py
+    depends_on:
+      - rabbitmq
+    environment:
+      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
 volumes:
   rabbitmq_data:
-
-

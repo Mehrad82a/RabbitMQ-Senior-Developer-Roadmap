@@ -1,5 +1,5 @@
 import json
-from rabbitmq_connection import RabbitMQConnection
+from api.rabbitmq_connection import RabbitMQConnection
 
 
 
