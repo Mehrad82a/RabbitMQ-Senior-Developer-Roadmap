@@ -7,6 +7,22 @@ from api.producer import publish
 
 router = APIRouter()
 
+"""
+API request body example:
+
+    
+    job_type must be one of these values:
+    image - email - report
+
+{
+  "job_type": "email",
+  "title": "Welcome Email",
+  "payload": {
+    "email": "user@gmail.com"
+  }
+}
+
+"""
 
 @router.post(f'/create-job')
 async def create_job(job: Job, background_tasks: BackgroundTasks):

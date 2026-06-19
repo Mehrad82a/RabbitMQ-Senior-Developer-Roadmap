@@ -1,6 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
-from producer import send_to_queue
+from api.producer import send_to_queue
 
 
 app = FastAPI()

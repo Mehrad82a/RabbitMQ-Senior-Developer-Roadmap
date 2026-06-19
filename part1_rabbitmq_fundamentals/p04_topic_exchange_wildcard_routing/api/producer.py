@@ -1,6 +1,6 @@
 import json
 from typing import Dict, Any
-from rabbitmq_connection import RabbitMQConnection
+from api.rabbitmq_connection import RabbitMQConnection
 
 
 def broadcast_event(routing_key: str, message: Dict[str, Any]):

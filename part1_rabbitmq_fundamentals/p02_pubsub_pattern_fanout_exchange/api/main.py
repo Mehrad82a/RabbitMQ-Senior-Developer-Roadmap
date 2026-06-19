@@ -1,6 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
-from producer import publish_event
+from api.producer import publish_event
 
 
 app = FastAPI()

@@ -1,4 +1,4 @@
-import sys, time, json
+import sys, time, json, random
 from api.rabbitmq_connection import RabbitMQConnection
 
 
@@ -32,13 +32,27 @@ def main():
 
 
     def callback(ch, method, properties, body):
-        data = json.loads(body)
+        json.loads(body)
 
-        print(f'[IMAGE Service] Processing image job')
-        time.sleep(5)  # For work simulation
-        print('[IMAGE Service] Image processed')
+        for attempt in range(3):
+            try:
+                print(f'[EMAIL Service] Sending email')
+                time.sleep(5)  # For work simulation
+                success = random.choice([True, False])
 
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+                if success:
+                    print('[IMAGE Service] Image processed')
+                    ch.basic_ack(delivery_tag=method.delivery_tag)
+                    return
+
+                else:
+                    print(f'[IMAGE Service] Failed on attempt {attempt + 1}')
+
+            except Exception as e:
+                print(f'[IMAGE Service] Exception: {e}')
+
+        print(f'[IMAGE Service] All retries failed -> Requeue')
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
     channel.basic_consume(queue=queue_name, on_message_callback=callback)
     channel.start_consuming()

@@ -1,9 +1,10 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
-from producer import publish
+from api.producer import publish
 
 
 app = FastAPI()
+
 
 class Job(BaseModel):
     title: str

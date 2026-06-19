@@ -1,7 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from typing import Dict, Any
-from producer import broadcast_event
+from api.producer import broadcast_event
 
 
 app = FastAPI()

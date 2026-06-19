@@ -14,10 +14,11 @@ services:
 
   fastapi:
     build:
-      context: ./api
+      context: .
     container_name: ${FASTAPI_CONTAINER_NAME}
     ports:
       - "8000:8000"
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
@@ -25,24 +26,24 @@ services:
     depends_on:
       - rabbitmq
     volumes:
-      - ./api:/app
+      - .:/app
     env_file:
       - .env
 
   worker:
     build:
-      context: ./worker
+      context: .
     container_name: ${WORKER_CONTAINER_NAME}
     depends_on:
       - rabbitmq
+    command: python worker/consumer.py
     environment:
       - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
       - RABBITMQ_HOST=${RABBITMQ_HOST}
       - RABBITMQ_USER=${RABBITMQ_USER}
       - RABBITMQ_PASS=${RABBITMQ_PASS}
     volumes:
-      - ./worker:/app
-      - ./api:/app/api   # Mount the api folder inside /app/api
+      - .:/app
     env_file:
       - .env
 

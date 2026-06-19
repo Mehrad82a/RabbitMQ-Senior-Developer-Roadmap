@@ -1,6 +1,6 @@
 import json, pika
 
-from rabbitmq_connection import RabbitMQConnection
+from api.rabbitmq_connection import RabbitMQConnection
 
 
 def publish_task(task: dict):

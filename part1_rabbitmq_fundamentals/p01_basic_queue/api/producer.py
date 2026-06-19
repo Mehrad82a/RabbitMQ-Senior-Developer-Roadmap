@@ -1,5 +1,5 @@
 import json, pika
-from rabbitmq_connection import RabbitMQConnection
+from api.rabbitmq_connection import RabbitMQConnection
 
 
 queue_name = 'tasks'

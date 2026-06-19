@@ -1,7 +1,5 @@
-import os, json, pika
-
-
-from rabbitmq_connection import RabbitMQConnection
+import json, pika
+from api.rabbitmq_connection import RabbitMQConnection
 
 
 def publish(data: dict):
