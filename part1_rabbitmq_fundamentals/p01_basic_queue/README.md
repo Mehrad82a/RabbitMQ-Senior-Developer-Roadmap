@@ -47,25 +47,44 @@ Background Worker
 
 ```text
 p01_basic_queue/
+│
 ├── app/
 │   ├── api/
+│   │   ├── __init__.py
 │   │   ├── routes.py
 │   │   └── schemas.py
+│   │
 │   ├── producer/
+│   │   ├── __init__.py
 │   │   └── producer.py
+│   │
 │   ├── worker/
+│   │   ├── __init__.py
 │   │   └── consumer.py
+│   │
 │   ├── services/
+│   │   ├── __init__.py
 │   │   └── task_service.py
+│   │
 │   ├── core/
+│   │   ├── __init__.py
 │   │   ├── config.py
 │   │   ├── logger.py
 │   │   └── rabbitmq.py
+│   ├── __init__.py
 │   └── main.py
+│
+├── tests/
+│   ├── __init__.py
+│   ├── test_producer.py
+│   └── test_consumer.py
+│
+├── .env.example
+├── .gitignore
+├── .dockerignore
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements.txt
-├── .env.example
 └── README.md
 ```
 
