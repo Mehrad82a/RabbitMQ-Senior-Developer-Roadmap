@@ -6,11 +6,22 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
+
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+
 
   fastapi:
     build:
@@ -18,30 +29,33 @@ services:
     container_name: ${FASTAPI_CONTAINER_NAME}
     ports:
       - "8000:8000"
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
-    environment:
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASS=${RABBITMQ_PASS}
+
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  # Development
+#    command: uvicorn app.main:app --host 0.0.0.0 --port 8000           # Production
+
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+
+    restart: unless-stopped
     volumes:
       - .:/app
     env_file:
       - .env
 
+
+
   worker:
     build:
       context: .
     container_name: ${WORKER_CONTAINER_NAME}
+
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+
     command: python worker/consumer.py
-    environment:
-      - PYTHONPATH=/app:/app/api:${PYTHONPATH}  # Tell Python to find api package
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASS=${RABBITMQ_PASS}
+    restart: unless-stopped
     volumes:
       - .:/app
     env_file:
