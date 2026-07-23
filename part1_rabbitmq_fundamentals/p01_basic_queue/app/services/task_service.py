@@ -1,4 +1,4 @@
-import time
+import time, uuid
 from app.core.logger import logger
 from app.producer.producer import publish
 
@@ -7,7 +7,9 @@ class TaskService:
 
     @staticmethod
     def create_task(task_data: dict) -> dict:
+        task_id = str(uuid.uuid4())
         task_payload = {
+            'task_id': task_id,
             'payload': task_data,
             'created_at': time.time(),
             'status': 'queued'
@@ -29,8 +31,9 @@ class TaskService:
         time.sleep(3)   # For task simulation
 
         result = {
-            'task_id': task.get('id'),
+            'task_id': task.get('task_id'),
             'status': 'Completed',
+            'task_payload': task,
         }
 
         logger.info(f'Task processed successfully: {result}')

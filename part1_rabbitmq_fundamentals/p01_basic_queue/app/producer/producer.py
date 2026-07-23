@@ -8,23 +8,28 @@ rabbitmq = RabbitMQConnection()
 queue_name = 'tasks'
 
 def publish(task: dict):
-    channel = rabbitmq.connect()
+    try:
+        channel = rabbitmq.connect()
 
-    channel.queue_declare(
-        queue=queue_name,
-        durable=True
-    )
+        channel.queue_declare(
+            queue=queue_name,
+            durable=True
+        )
 
-    task = json.dumps(task)
+        task = json.dumps(task)
 
-    channel.basic_publish(
-        exchange='',
-        routing_key=queue_name,
-        body=task,
-        properties=pika.BasicProperties(delivery_mode=2),
-    )
+        channel.basic_publish(
+            exchange='',
+            routing_key=queue_name,
+            body=task,
+            properties=pika.BasicProperties(delivery_mode=2),
+        )
 
-    logger.info(f'[x] Task published successfully: {task}')
+        logger.info(f'[Producer] Task published successfully: {task}')
+        return True
 
+    except Exception as e:
+        logger.error(f'[Producer] Task published failed: {e}')
+        return False
 
 

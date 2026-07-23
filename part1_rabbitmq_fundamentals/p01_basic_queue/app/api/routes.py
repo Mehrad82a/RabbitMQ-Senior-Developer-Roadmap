@@ -7,10 +7,9 @@ router = APIRouter()
 
 
 @router.post('/send-task/', status_code=status.HTTP_202_ACCEPTED)
-
 def send_task(task: Task, background_tasks: BackgroundTasks):
-    background_tasks.add_task(TaskService.create_task, task.model_dump())
-    return {{
+    background_tasks.add_task(TaskService.create_task, task.dict())
+    return {
         'message': 'Task accepted',
         'status': 'accepted'
-    }}
+    }
