@@ -1,4 +1,4 @@
-import sys, json , time
+import sys, json
 from app.core.rabbitmq import RabbitMQConnection
 from app.core.logger import logger
 from app.services.task_service import TaskService
