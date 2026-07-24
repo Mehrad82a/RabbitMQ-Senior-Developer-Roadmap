@@ -58,7 +58,7 @@ p01_basic_queue/
 │   │   ├── __init__.py
 │   │   └── producer.py
 │   │
-│   ├── worker/
+│   ├── workers/
 │   │   ├── __init__.py
 │   │   └── consumer.py
 │   │
@@ -260,7 +260,7 @@ INFO | Task processed successfully
 Run multiple requests:
 
 ```bash
-curl -X POST http://localhost:8000/tasks/ \
+curl -X POST http://localhost:8000/send-task/ \
   -H "Content-Type: application/json" \
   -d '{"name":"generate_report", "body": {"format': "pdf", "user_id": "user_123", "department": "finance"}}'
 ```
@@ -297,7 +297,7 @@ We will broadcast a single message to **multiple consumers** (Email and SMS serv
 
 ## 📝 Author
 
-**Mohamad A**
+**Mohamad Abbasi**
 
 GitHub: https://github.com/Mohamad82a
 
@@ -305,4 +305,4 @@ GitHub: https://github.com/Mohamad82a
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](../../LICENSE) file for details.

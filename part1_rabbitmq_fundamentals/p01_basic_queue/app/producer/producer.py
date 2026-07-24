@@ -7,7 +7,7 @@ rabbitmq = RabbitMQConnection()
 
 queue_name = 'tasks'
 
-def publish(task: dict):
+def publish(task: dict) -> bool:
     try:
         channel = rabbitmq.connect()
 

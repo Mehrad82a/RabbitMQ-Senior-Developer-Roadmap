@@ -1,7 +1,7 @@
 services:
   rabbitmq:
-#    image: rabbitmq:3.11-management
-    image: docker.arvancloud.ir/rabbitmq:latest
+#    image: rabbitmq:4-management
+    image: docker.arvancloud.ir/rabbitmq:4-management
     container_name: ${RABBITMQ_CONTAINER_NAME}
     ports:
       - "5672:5672"
@@ -54,7 +54,7 @@ services:
       rabbitmq:
         condition: service_healthy
 
-    command: python -m app.worker.consumer
+    command: python -m app.workers.consumer
     restart: unless-stopped
     volumes:
       - .:/app
