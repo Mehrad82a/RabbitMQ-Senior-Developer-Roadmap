@@ -1,7 +1,4 @@
-import json
-
-import pika
-
+import json, pika
 from app.core.rabbitmq import RabbitMQConnection
 from app.core.logger import logger
 

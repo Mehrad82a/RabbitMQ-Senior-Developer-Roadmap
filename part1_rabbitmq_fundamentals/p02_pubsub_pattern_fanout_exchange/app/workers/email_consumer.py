@@ -3,7 +3,11 @@ from app.core.rabbitmq import RabbitMQConnection
 from app.core.logger import logger
 from app.services.email_service import process_email_event
 
+
 rabbitmq = RabbitMQConnection()
+exchange_name = 'notifications'
+queue_name = 'email_notifications'
+
 
 def callback(ch, method, body):
     """
@@ -28,8 +32,7 @@ def callback(ch, method, body):
     except Exception as e:
         logger.error(f'Event not acknowledged | Error: {e}')
 
-exchange_name = 'notifications'
-queue_name = 'email_notifications'
+
 
 def main():
     channel = rabbitmq.connect()

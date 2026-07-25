@@ -29,7 +29,7 @@ def publish(task: dict) -> bool:
         return True
 
     except Exception as e:
-        logger.error(f'[Producer] Task published failed: {e}')
+        logger.error(f'[Producer] Publish task failed: {e}')
         return False
 
 
