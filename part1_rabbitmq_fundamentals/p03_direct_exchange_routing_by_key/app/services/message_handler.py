@@ -6,7 +6,7 @@ from app.producer.producer import publish
 class MessageService:
 
     @staticmethod
-    def send_message(level: str, message:str) -> dict:
+    def send_message(level: str, message:str):
         message_id = str(uuid.uuid4())
         message_payload = {
             'message_id': message_id,
@@ -15,7 +15,7 @@ class MessageService:
             'created_at': time.time(),
         }
 
-        published = publish(level=level, message=message)
+        published = publish(message_payload)
 
         if not published:
             raise RuntimeError('Failed to send message')

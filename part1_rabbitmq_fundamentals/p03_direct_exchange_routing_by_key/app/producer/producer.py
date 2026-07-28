@@ -9,8 +9,11 @@ from app.core.logger import logger
 rabbitmq = RabbitMQConnection()
 
 
-def publish(level: str, message: str) -> bool:
+def publish(payload: dict) -> bool:
     try:
+        level = payload.get('level')
+        message = payload.get('message')
+
         channel = rabbitmq.connect()
 
         # Declare a direct exchange
@@ -20,7 +23,7 @@ def publish(level: str, message: str) -> bool:
             durable=True,
         )
 
-        data = json.dumps({'level': level, 'message': message})
+        data = json.dumps(payload)
 
         channel.basic_publish(
             exchange='direct_logs',

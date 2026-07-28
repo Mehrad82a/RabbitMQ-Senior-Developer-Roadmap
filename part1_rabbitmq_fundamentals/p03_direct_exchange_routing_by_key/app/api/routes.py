@@ -1,5 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks, status
-from app.services.message_service import MessageService
+from app.services.message_handler import MessageService
 from app.api.schemas import Message
 
 router = APIRouter()
@@ -12,5 +12,5 @@ def broadcast_message(message: Message, background_tasks: BackgroundTasks):
     return {
         'status': 'sent',
         'level': message.level,
-        'message': message.body
+        'message': message.message
     }
