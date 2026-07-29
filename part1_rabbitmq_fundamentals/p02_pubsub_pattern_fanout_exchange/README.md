@@ -96,7 +96,7 @@ p01_basic_queue/
 │   ├── __init__.py
 │   └── main.py
 │
-├── tests/
+├── tests/ (Coming soon)
 │   ├── __init__.py
 │   ├── test_producer.py
 │   ├── test_email_consumer.py
