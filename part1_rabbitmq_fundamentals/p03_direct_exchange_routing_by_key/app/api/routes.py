@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.post('/send-log')
-def broadcast_message(message: Message, background_tasks: BackgroundTasks):
+def send_message(message: Message, background_tasks: BackgroundTasks):
     background_tasks.add_task(MessageService.send_message, level=message.level, message=message.message)
     return {
         'status': 'sent',

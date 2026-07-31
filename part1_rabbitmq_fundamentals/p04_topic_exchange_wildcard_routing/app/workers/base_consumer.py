@@ -5,13 +5,13 @@ from app.core.logger import logger
 from app.core.rabbitmq import RabbitMQConnection
 from app.services.handlers.base_handler import BaseHandler
 
-class BaseDirectConsumer(ABC):
+class BaseTopicConsumer(ABC):
     """
     Base RabbitMQ consumer
 
     This class implements the common workflow for all consumers:
         - Connect to RabbitMQ
-        - Declare direct exchange
+        - Declare topic exchange
         - Declare queue
         - Bind queue
         - Consume messages
@@ -20,11 +20,11 @@ class BaseDirectConsumer(ABC):
     Child classes only implement business logic.
     """
 
-    exchange_name = 'direct_logs'
-    exchange_type = 'direct'
+    exchange_name = 'topic_events'
+    exchange_type = 'topic'
 
     queue_name = ''
-    routing_key = ''
+    binding_key = ''
 
     def __init__(self, handler: BaseHandler):
         self.rabbitmq = RabbitMQConnection()
@@ -46,12 +46,12 @@ class BaseDirectConsumer(ABC):
             )
 
             logger.info(
-                f'[{self.__class__.__name__}] Message acknowledged successfully'
+                f'[{self.__class__.__name__}] Event acknowledged successfully'
             )
 
         except Exception as e:
 
-            logger.exception(f'[{self.__class__.__name__}] Message not acknowledged | Error: {e}]')
+            logger.exception(f'[{self.__class__.__name__}] Event not acknowledged | Error: {e}]')
 
             ch.basic_nack(
                 delivery_tag=method.delivery_tag,
@@ -76,7 +76,7 @@ class BaseDirectConsumer(ABC):
         channel.queue_bind(
             exchange=self.exchange_name,
             queue=self.queue_name,
-            routing_key=self.routing_key,
+            routing_key=self.binding_key,
         )
 
         channel.basic_qos(prefetch_count=1)
@@ -86,6 +86,6 @@ class BaseDirectConsumer(ABC):
             on_message_callback=self.callback,
         )
 
-        logger.info(f'[{self.__class__.__name__}] Waiting for messages on queue: {self.queue_name}')
+        logger.info(f'[{self.__class__.__name__}] Waiting for <{self.binding_key}> events on queue: {self.queue_name}')
 
         channel.start_consuming()
