@@ -1,16 +1,18 @@
 import sys
 
-from app.workers.base_consumer import BaseTopicConsumer
 from app.services.handlers.error_handler import ErrorHandler
+from app.consumers.base_consumer import BaseDirectConsumer
 
 
-class ErrorConsumer(BaseTopicConsumer):
 
-    queue_name = 'error_events'
-    binding_key = '#.error'
+class ErrorConsumer(BaseDirectConsumer):
+
+    queue_name = 'error_logs'
+    routing_key =  'error'
 
     def __init__(self):
         super().__init__(handler=ErrorHandler())
+
 
 
 if __name__ == '__main__':
@@ -23,6 +25,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         consumer.rabbitmq.close()
         sys.exit(0)
-
 
 

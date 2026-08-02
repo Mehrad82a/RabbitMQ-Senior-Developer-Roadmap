@@ -1,6 +1,6 @@
 import sys
 
-from app.workers.base_consumer import BaseTopicConsumer
+from app.consumers.base_consumer import BaseTopicConsumer
 from app.services.handlers.user_handler import UserHandler
 
 

@@ -58,7 +58,7 @@ p01_basic_queue/
 │   │   ├── __init__.py
 │   │   └── producer.py
 │   │
-│   ├── workers/
+│   ├── consumers/
 │   │   ├── __init__.py
 │   │   └── consumer.py
 │   │

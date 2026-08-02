@@ -88,12 +88,12 @@ p03_direct_exchange_routing_by_key/
 │   ├── producer/
 │   │   └── producer.py
 │   │
-│   ├── workers/
+│   ├── consumers/
 │   │   ├── base_consumer.py
-│   │   └── consumers/
-│   │       ├── info_consumer.py
-│   │       ├── warning_consumer.py
-│   │       └── error_consumer.py
+│   │   ├── info_consumer.py
+│   │   ├── warning_consumer.py
+│   │   └── error_consumer.py
+│   │
 │   │
 │   ├── services/
 │   │   └── handlers/

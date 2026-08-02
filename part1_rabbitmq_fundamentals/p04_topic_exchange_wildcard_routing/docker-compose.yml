@@ -53,7 +53,7 @@ services:
       rabbitmq:
         condition: service_healthy
 
-    command: python -m app.workers.consumers.user_consumer
+    command: python -m app.consumers.user_consumer
     restart: unless-stopped
     volumes:
       - .:/app
@@ -70,7 +70,7 @@ services:
       rabbitmq:
         condition: service_healthy
 
-    command: python -m app.workers.consumers.order_consumer
+    command: python -m app.consumers.order_consumer
     restart: unless-stopped
     volumes:
       - .:/app
@@ -88,7 +88,7 @@ services:
       rabbitmq:
         condition: service_healthy
 
-    command: python -m app.workers.consumers.error_consumer
+    command: python -m app.consumers.error_consumer
     restart: unless-stopped
     volumes:
       - .:/app

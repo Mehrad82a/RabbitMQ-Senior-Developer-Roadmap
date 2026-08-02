@@ -5,7 +5,8 @@ from app.core.logger import logger
 
 
 rabbitmq = RabbitMQConnection()
-
+exchange_name = 'direct_logs'
+exchange_type = 'direct'
 
 def publish(payload: dict) -> bool:
     try:
@@ -16,15 +17,15 @@ def publish(payload: dict) -> bool:
 
         # Declare a direct exchange
         channel.exchange_declare(
-            exchange='direct_logs',
-            exchange_type='direct',
+            exchange=exchange_name,
+            exchange_type=exchange_type,
             durable=True,
         )
 
         data = json.dumps(payload)
 
         channel.basic_publish(
-            exchange='direct_logs',
+            exchange=exchange_name,
             routing_key=level,
             body=data,
             properties=pika.BasicProperties(delivery_mode=2)

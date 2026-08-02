@@ -20,12 +20,12 @@ p04_topic_exchange_wildcard_routing/
 │   │       ├── order_handler.py
 │   │       └── error_handler.py
 │   │
-│   ├── workers/
+│   ├── consumers/
 │   │   ├── base_consumer.py
-│   │   └── consumers/
-│   │       ├── user_consumer.py
-│   │       ├── order_consumer.py
-│   │       └── error_consumer.py
+│   │   ├── user_consumer.py
+│   │   ├── order_consumer.py
+│   │   └── error_consumer.py
+│   │
 │   │
 │   └── main.py
 │

@@ -6,7 +6,9 @@ from app.services.sms_service import process_sms_event
 
 
 rabbitmq = RabbitMQConnection()
+
 exchange_name = 'notifications'
+exchange_type = 'fanout'
 queue_name = 'sms_notifications'
 
 
@@ -41,7 +43,7 @@ def main():
     channel.exchange_declare(
         # exchange='logs',
         exchange=exchange_name,
-        exchange_type='fanout',
+        exchange_type=exchange_type,
         durable=True,
     )
 
