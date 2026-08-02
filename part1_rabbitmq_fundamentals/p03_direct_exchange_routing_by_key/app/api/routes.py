@@ -6,7 +6,7 @@ router = APIRouter()
 
 
 
-@router.post('/send-log')
+@router.post('/send-log', status_code=status.HTTP_202_ACCEPTED)
 def send_message(message: Message, background_tasks: BackgroundTasks):
     background_tasks.add_task(MessageService.send_message, level=message.level, message=message.message)
     return {
