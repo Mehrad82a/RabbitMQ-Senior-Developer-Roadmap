@@ -16,14 +16,15 @@ class BaseHandler(ABC):
 
     @property
     @abstractmethod
-    def worker_name(self) -> str:
+    def handler_name(self) -> str:
         """
-        Name of the worker.
+        Name of the handler.
 
         Example:
             user
             order
             error
+            created
         """
         pass
 

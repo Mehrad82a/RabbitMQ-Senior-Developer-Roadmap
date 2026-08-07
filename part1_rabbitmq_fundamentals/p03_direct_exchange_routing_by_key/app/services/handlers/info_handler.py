@@ -10,8 +10,8 @@ from app.services.handlers.base_handler import BaseHandler
 class InfoHandler(BaseHandler):
 
     @property
-    def worker_name(self) -> str:
-        return 'Info Worker'
+    def handler_name(self) -> str:
+        return 'Info Handler'
 
 
     def process(self, data: dict[str, Any]) -> dict[str, Any]:
@@ -19,7 +19,7 @@ class InfoHandler(BaseHandler):
         Process an INFO log message.
         """
 
-        logger.info(f"[{self.worker_name}] Processing message: {data.get('message')}")
+        logger.info(f"[{self.handler_name}] Processing message: {data.get('message')}")
 
         # Simulate processing
         time.sleep(3)
@@ -27,12 +27,12 @@ class InfoHandler(BaseHandler):
         result = {
             'message_id': data.get('message_id'),
             'level': 'info',
-            'worker': self.worker_name,
+            'worker': self.handler_name,
             'status': 'processed',
             'payload': data,
         }
 
-        logger.info(f'[{self.worker_name}] Message processed successfully')
+        logger.info(f'[{self.handler_name}] Message processed successfully')
 
         return result
 
