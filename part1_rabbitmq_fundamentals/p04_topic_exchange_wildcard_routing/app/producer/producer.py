@@ -5,13 +5,14 @@ from app.core.logger import logger
 
 
 rabbitmq = RabbitMQConnection()
-exchange_name = 'direct_logs'
-exchange_type = 'direct'
 
-def publish(payload: dict) -> bool:
+exchange_name = 'topic_events'
+exchange_type = 'topic'
+
+
+def publish(event: dict) -> bool:
     try:
-        level = payload.get('level')
-        message = payload.get('message')
+        routing_key = event.get('routing_key')
 
         channel = rabbitmq.connect()
 
@@ -22,15 +23,15 @@ def publish(payload: dict) -> bool:
             durable=True,
         )
 
-        data = json.dumps(payload)
+        data = json.dumps(event)
 
         channel.basic_publish(
             exchange=exchange_name,
-            routing_key=level,
+            routing_key=routing_key,
             body=data,
             properties=pika.BasicProperties(delivery_mode=2)
         )
-        logger.info(f"[Producer] Published data successfully | Data: '{level}'- {message}")
+        logger.info(f"[Producer] Published event successfully | Event: '{event}'")
         return True
 
     except Exception as e:

@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 
+
+
+
 class BaseHandler(ABC):
     """
     Base class for all message handlers.
@@ -18,9 +21,10 @@ class BaseHandler(ABC):
         Name of the handler.
 
         Example:
-            info
-            warning
+            user
+            order
             error
+            created
         """
         pass
 
@@ -28,3 +32,5 @@ class BaseHandler(ABC):
     @abstractmethod
     def process(self, data: dict[str, Any]) -> dict[str, Any]:
         pass
+
+

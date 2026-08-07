@@ -79,7 +79,7 @@ p01_basic_queue/
 │   │   ├── __init__.py
 │   │   └── producer.py
 │   │
-│   ├── workers/
+│   ├── consumers/
 │   │   ├── __init__.py
 │   │   ├── email_consumer.py
 │   │   └── sms_consumer.py
@@ -120,7 +120,7 @@ p01_basic_queue/
 ```bash
 git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
-cd rabbitmq-course/part1_rabbitmq_fundamentals/p02_pubsub_pattern_fanout_exchange
+cd part1_rabbitmq_fundamentals/p02_pubsub_pattern_fanout_exchange
 ```
 
 ---

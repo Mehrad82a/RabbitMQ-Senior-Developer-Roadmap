@@ -88,12 +88,12 @@ p03_direct_exchange_routing_by_key/
 │   ├── producer/
 │   │   └── producer.py
 │   │
-│   ├── workers/
+│   ├── consumers/
 │   │   ├── base_consumer.py
-│   │   └── consumers/
-│   │       ├── info_consumer.py
-│   │       ├── warning_consumer.py
-│   │       └── error_consumer.py
+│   │   ├── info_consumer.py
+│   │   ├── warning_consumer.py
+│   │   └── error_consumer.py
+│   │
 │   │
 │   ├── services/
 │   │   └── handlers/
@@ -133,7 +133,7 @@ p03_direct_exchange_routing_by_key/
 ```bash
 git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
-cd rabbitmq-course/part1_rabbitmq_fundamentals/p03_direct_exchange_routing_by_key
+cd part1_rabbitmq_fundamentals/p03_direct_exchange_routing_by_key
 ```
 
 ---

@@ -5,7 +5,9 @@ from app.services.email_service import process_email_event
 
 
 rabbitmq = RabbitMQConnection()
+
 exchange_name = 'notifications'
+exchange_type = 'fanout'
 queue_name = 'email_notifications'
 
 
@@ -40,7 +42,7 @@ def main():
     channel.exchange_declare(
         # exchange='logs',
         exchange=exchange_name,
-        exchange_type='fanout',
+        exchange_type=exchange_type,
         durable=True,
     )
 

@@ -58,7 +58,7 @@ p01_basic_queue/
 │   │   ├── __init__.py
 │   │   └── producer.py
 │   │
-│   ├── workers/
+│   ├── consumers/
 │   │   ├── __init__.py
 │   │   └── consumer.py
 │   │
@@ -96,7 +96,7 @@ p01_basic_queue/
 
 ```bash
 git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
-cd rabbitmq-course/part1_rabbitmq_fundamentals/p01_basic_queue
+cd part1_rabbitmq_fundamentals/p01_basic_queue
 ```
 
 ### 2. Create environment file

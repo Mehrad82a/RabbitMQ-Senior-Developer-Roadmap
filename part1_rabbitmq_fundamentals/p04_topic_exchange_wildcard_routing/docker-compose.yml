@@ -44,16 +44,16 @@ services:
 
 
 
-  info_worker:
+  user_worker:
     build:
       context: .
-    container_name: ${INFO_WORKER_CONTAINER_NAME}
+    container_name: ${USER_WORKER_CONTAINER_NAME}
 
     depends_on:
       rabbitmq:
         condition: service_healthy
 
-    command: python -m app.consumers.info_consumer
+    command: python -m app.consumers.user_consumer
     restart: unless-stopped
     volumes:
       - .:/app
@@ -61,16 +61,34 @@ services:
       - .env
 
 
-  warning_worker:
+  order_worker:
     build:
       context: .
-    container_name: ${WARNING_WORKER_CONTAINER_NAME}
+    container_name: ${ORDER_WORKER_CONTAINER_NAME}
 
     depends_on:
       rabbitmq:
         condition: service_healthy
 
-    command: python -m app.consumers.warning_consumer
+    command: python -m app.consumers.order_consumer
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
+
+  created_worker:
+    build:
+      context: .
+    container_name: ${CREATED_WORKER_CONTAINER_NAME}
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+    command: python -m app.consumers.created_consumer
     restart: unless-stopped
     volumes:
       - .:/app

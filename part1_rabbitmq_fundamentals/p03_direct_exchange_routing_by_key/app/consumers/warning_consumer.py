@@ -1,7 +1,7 @@
 import sys
 
 
-from app.workers.base_consumer import BaseDirectConsumer
+from app.consumers.base_consumer import BaseDirectConsumer
 from app.services.handlers.warning_handler import WarningHandler
 
 

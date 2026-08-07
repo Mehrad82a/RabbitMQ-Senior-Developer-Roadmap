@@ -46,7 +46,7 @@ class BaseDirectConsumer(ABC):
             )
 
             logger.info(
-                f'[{self.__class__.__name__}] Message acknowledged.'
+                f'[{self.__class__.__name__}] Message acknowledged successfully'
             )
 
         except Exception as e:

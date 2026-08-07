@@ -1,5 +1,5 @@
 import sys
-from app.workers.base_consumer import BaseDirectConsumer
+from app.consumers.base_consumer import BaseDirectConsumer
 from app.services.handlers.info_handler import InfoHandler
 
 

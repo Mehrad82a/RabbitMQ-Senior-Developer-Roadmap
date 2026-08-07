@@ -1,7 +1,7 @@
 import sys
 
 from app.services.handlers.error_handler import ErrorHandler
-from app.workers.base_consumer import BaseDirectConsumer
+from app.consumers.base_consumer import BaseDirectConsumer
 
 
 

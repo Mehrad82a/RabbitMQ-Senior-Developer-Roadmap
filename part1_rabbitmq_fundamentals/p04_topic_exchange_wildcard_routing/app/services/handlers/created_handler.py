@@ -1,43 +1,35 @@
 import time
 from typing import Any
 
-
 from app.core.logger import logger
 from app.services.handlers.base_handler import BaseHandler
 
 
 
-class InfoHandler(BaseHandler):
+class CreatedHandler(BaseHandler):
 
     @property
     def handler_name(self) -> str:
-        return 'Info Handler'
+        return 'Created Handler'
 
 
     def process(self, data: dict[str, Any]) -> dict[str, Any]:
         """
-        Process an INFO log message.
+        Process an Error event
         """
-
-        logger.info(f"[{self.handler_name}] Processing message: {data.get('message')}")
+        logger.info(f"[{self.handler_name}] Processing event: {data.get('message')}")
 
         # Simulate processing
         time.sleep(3)
 
         result = {
-            'message_id': data.get('message_id'),
-            'level': 'info',
+            'event_id': data.get('event_id'),
+            'routing_key': data.get('routing_key'),
             'worker': self.handler_name,
             'status': 'processed',
-            'payload': data,
+            'payload': data
         }
 
-        logger.info(f'[{self.handler_name}] Message processed successfully')
+        logger.info(f'[{self.handler_name}] Event processed successfully')
 
         return result
-
-
-
-
-
-

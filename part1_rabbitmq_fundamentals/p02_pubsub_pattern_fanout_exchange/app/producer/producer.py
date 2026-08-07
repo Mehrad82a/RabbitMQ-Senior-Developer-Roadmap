@@ -6,6 +6,7 @@ from app.core.logger import logger
 rabbitmq = RabbitMQConnection()
 
 exchange_name = 'notifications'
+exchange_type = 'fanout'
 
 def publish_event(event: dict) -> bool:
     try:
@@ -13,7 +14,7 @@ def publish_event(event: dict) -> bool:
 
         channel.exchange_declare(
             exchange=exchange_name,
-            exchange_type='fanout',
+            exchange_type=exchange_type,
             durable=True
         )
 
