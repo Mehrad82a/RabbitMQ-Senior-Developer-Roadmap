@@ -1,1 +1,4 @@
 .idea
+venv
+.gitignore
+part1_rabbitmq_fundamentals/p01_basic_queue/.gitignore

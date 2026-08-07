@@ -79,6 +79,24 @@ services:
 
 
 
+  created_worker:
+    build:
+      context: .
+    container_name: ${CREATED_WORKER_CONTAINER_NAME}
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+    command: python -m app.consumers.created_consumer
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
+
   error_worker:
     build:
       context: .
