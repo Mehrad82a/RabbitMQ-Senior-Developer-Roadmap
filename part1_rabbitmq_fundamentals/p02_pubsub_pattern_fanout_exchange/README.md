@@ -120,7 +120,7 @@ p01_basic_queue/
 ```bash
 git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
-cd rabbitmq-course/part1_rabbitmq_fundamentals/p02_pubsub_pattern_fanout_exchange
+cd part1_rabbitmq_fundamentals/p02_pubsub_pattern_fanout_exchange
 ```
 
 ---

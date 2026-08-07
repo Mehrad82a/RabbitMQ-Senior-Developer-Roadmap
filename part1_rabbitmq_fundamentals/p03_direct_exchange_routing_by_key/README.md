@@ -133,7 +133,7 @@ p03_direct_exchange_routing_by_key/
 ```bash
 git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
-cd rabbitmq-course/part1_rabbitmq_fundamentals/p03_direct_exchange_routing_by_key
+cd part1_rabbitmq_fundamentals/p03_direct_exchange_routing_by_key
 ```
 
 ---
