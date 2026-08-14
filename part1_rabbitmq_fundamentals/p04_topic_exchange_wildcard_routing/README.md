@@ -111,7 +111,7 @@ p04_topic_exchange/
 │   ├── __init__.py
 │   └── main.py
 │
-├── tests/ (Coming soon)
+├── tests/ (To be implemented)
 │   ├── test_producer.py
 │   ├── test_user_consumer.py
 │   ├── test_order_consumer.py
