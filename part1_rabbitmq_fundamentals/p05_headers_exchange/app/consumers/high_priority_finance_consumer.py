@@ -5,11 +5,12 @@ from app.services.handlers.high_priority_finance_handler import HighPriorityFina
 
 
 
+
 class HighPriorityFinanceConsumer(BaseHeadersConsumer):
 
     queue_name = 'high_priority_finance_events'
 
-    biding_arguments = {
+    binding_arguments = {
         'x-match': 'all',
         'department': 'finance',
         'priority': 'high',

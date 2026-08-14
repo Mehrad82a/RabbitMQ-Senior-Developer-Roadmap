@@ -7,9 +7,10 @@ from app.services.handlers.hr_handler import HRHandler
 class HRConsumer(BaseHeadersConsumer):
     queue_name = 'hr_events'
 
-    biding_arguments = {
+    binding_arguments = {
         'x-match': 'all',
         'department': 'hr',
+        'priority': 'normal',
     }
 
     def __init__(self):

@@ -22,7 +22,7 @@ def publish(event: dict) -> bool:
         )
 
         data = json.dumps(event)
-        headers = event.get('headers')
+        headers = event['event_data']['headers']
 
         channel.basic_publish(
             exchange=exchange_name,
