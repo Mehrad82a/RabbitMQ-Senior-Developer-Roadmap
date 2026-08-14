@@ -74,7 +74,7 @@ p01_basic_queue/
 │   ├── __init__.py
 │   └── main.py
 │
-├── tests/ (Coming soon)
+├── tests/ (To be implemented)
 │   ├── __init__.py
 │   ├── test_producer.py
 │   └── test_consumer.py
