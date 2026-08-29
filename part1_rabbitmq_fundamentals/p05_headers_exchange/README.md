@@ -122,12 +122,6 @@ p05_headers_exchange/
 │   ├── __init__.py
 │   └── main.py
 │
-├── tests/ (To be implemented)
-│   ├── __init__.py
-│   ├── test_producer.py
-│   ├── test_finance_consumer.py
-│   ├── test_high_priority_finance_consumer.py
-│   └── test_hr_consumer.py
 │
 ├── .env.example
 ├── .gitignore

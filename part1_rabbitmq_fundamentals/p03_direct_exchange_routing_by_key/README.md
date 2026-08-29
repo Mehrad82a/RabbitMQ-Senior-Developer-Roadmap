@@ -109,11 +109,6 @@ p03_direct_exchange_routing_by_key/
 │   │
 │   └── main.py
 │
-├── tests/ (To be implemented)
-│   ├── test_producer.py
-│   ├── test_info_consumer.py
-│   ├── test_warning_consumer.py
-│   └── test_error_consumer.py
 │
 ├── .env.example
 ├── .gitignore
