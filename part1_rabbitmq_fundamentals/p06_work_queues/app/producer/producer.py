@@ -7,6 +7,7 @@ from app.core.rabbitmq import RabbitMQConnection
 
 
 class Producer:
+
     def __init__(self, queue_name: str, rabbitmq: RabbitMQConnection | None = None) -> None:
 
         if not queue_name.strip():
@@ -14,6 +15,7 @@ class Producer:
 
         self._queue_name = queue_name
         self._rabbitmq = rabbitmq or RabbitMQConnection()
+
 
 
     def publish(self, task: Mapping[str, object]) -> None:
