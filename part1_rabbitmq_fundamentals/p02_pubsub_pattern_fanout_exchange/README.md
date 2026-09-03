@@ -66,7 +66,7 @@ Every published event is copied into **both queues**, allowing each service to p
 
 # 📁 Project Structure
 
-```
+```text
 p01_basic_queue/
 │
 ├── app/
@@ -96,11 +96,6 @@ p01_basic_queue/
 │   ├── __init__.py
 │   └── main.py
 │
-├── tests/ (To be implemented)
-│   ├── __init__.py
-│   ├── test_producer.py
-│   ├── test_email_consumer.py
-│   └── test_sms_consumer.py
 │
 ├── .env.example
 ├── .gitignore
