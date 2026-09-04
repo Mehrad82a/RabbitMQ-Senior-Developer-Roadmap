@@ -20,6 +20,9 @@ services:
       timeout: 5s
       retries: 10
 
+    restart: unless-stopped
+
+
 
 
 

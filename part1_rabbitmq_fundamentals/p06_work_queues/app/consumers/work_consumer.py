@@ -51,8 +51,8 @@ class WorkConsumer(BaseConsumer):
 
         try:
             logger.info(f"[{self.__class__.__name__}] Task Processing started for task:<{task.get('task_id')}>")
-            result = self._handler.process(task)
 
+            result = self._handler.process(task)
 
             logger.info(f'[{self.__class__.__name__}] Result: {result}')
             channel.basic_ack(
