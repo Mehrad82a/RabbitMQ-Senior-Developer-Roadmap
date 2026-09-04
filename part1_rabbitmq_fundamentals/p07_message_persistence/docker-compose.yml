@@ -14,12 +14,15 @@ services:
 
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq/
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
 
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 10
+
+    restart: unless-stopped
 
 
   fastapi:
@@ -53,13 +56,15 @@ services:
       rabbitmq:
         condition: service_healthy
 
+    environment:
+      HANDLER_NAME: ${HANDLER_NAME}
+
     command: python -m app.worker
     restart: unless-stopped
     volumes:
       - .:/app
     env_file:
       - .env
-
 
 
 volumes:

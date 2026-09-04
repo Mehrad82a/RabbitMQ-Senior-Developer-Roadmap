@@ -69,9 +69,12 @@ class Producer:
 
             broker_confirmed = True if publisher_confirm else None
 
-            logger.info(f'Message published successfully: message_id={message_id}'
-                        f'on queue={queue_name}'
-                        f'queue_durable={queue_durable} - message_persistent={message_persistent} - publisher_confirm={broker_confirmed}'
+            logger.info(f'Message published successfully: message_id={message_id} '
+                        f'on queue={queue_name} | '
+                        f'queue_durable={queue_durable} - '
+                        f'message_persistent={message_persistent} - '
+                        f'publisher_confirm={publisher_confirm} - '
+                        f'broker_confirmed={broker_confirmed}'
             )
 
             return broker_confirmed
