@@ -19,10 +19,10 @@ def run_docker_compose(*arguments: str) -> str:
     try:
         result = subprocess.run(
             command,
-            cmd=PROJECT_ROOT,
+            cwd=PROJECT_ROOT,
             check=False,
             capture_output=True,
-            test=True,
+            text=True,
             encoding='utf-8',
         )
 
