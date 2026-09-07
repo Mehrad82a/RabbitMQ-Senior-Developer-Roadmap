@@ -3,3 +3,4 @@ pydantic
 uvicorn[standard]
 pika
 pydantic-settings
+pytest
