@@ -138,7 +138,7 @@ p05_headers_exchange/
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
+git clone https://github.com/Mehrad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
 cd part1_rabbitmq_fundamentals/p05_headers_exchange
 ```
@@ -790,11 +790,11 @@ Learn how RabbitMQ distributes tasks between multiple workers using a shared que
 
 # 📝 Author
 
-**Mohamad Abbasi**
+**Mehrad Abbasi**
 
 GitHub:
 
-https://github.com/Mohamad82a
+https://github.com/Mehrad82a
 
 ---
 
