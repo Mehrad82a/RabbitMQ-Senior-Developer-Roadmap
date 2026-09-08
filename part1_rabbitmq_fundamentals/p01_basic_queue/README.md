@@ -91,7 +91,7 @@ p01_basic_queue/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
+git clone https://github.com/Mehrad82a/RabbitMQ-Senior-Developer-Roadmap.git
 cd part1_rabbitmq_fundamentals/p01_basic_queue
 ```
 
@@ -293,9 +293,9 @@ We will broadcast a single message to **multiple consumers** (Email and SMS serv
 
 ## 📝 Author
 
-**Mohamad Abbasi**
+**Mehrad Abbasi**
 
-GitHub: https://github.com/Mohamad82a
+GitHub: https://github.com/Mehrad82a
 
 ---
 
