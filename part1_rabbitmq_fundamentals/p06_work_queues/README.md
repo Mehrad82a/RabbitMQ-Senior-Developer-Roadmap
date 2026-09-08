@@ -148,7 +148,7 @@ Automated tests will be implemented later.
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
+git clone https://github.com/Mehrad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
 cd part1_rabbitmq_fundamentals/p06_work_queues
 ```
@@ -1389,11 +1389,11 @@ Day 7 will focus specifically on understanding how these mechanisms behave and w
 
 # 📝 Author
 
-**Mohamad Abbasi**
+**Mehrad Abbasi**
 
 GitHub:
 
-https://github.com/Mohamad82a
+https://github.com/Mehrad82a
 
 ---
 

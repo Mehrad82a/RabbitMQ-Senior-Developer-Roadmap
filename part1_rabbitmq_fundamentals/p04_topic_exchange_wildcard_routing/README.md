@@ -128,7 +128,7 @@ p04_topic_exchange/
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
+git clone https://github.com/Mehrad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
 cd part1_rabbitmq_fundamentals/p04_topic_exchange_wildcard_routing
 ```
@@ -598,11 +598,11 @@ Learn how to route messages based on **message headers** instead of routing keys
 
 # 📝 Author
 
-**Mohamad Abbasi**
+**Mehrad Abbasi**
 
 GitHub:
 
-https://github.com/Mohamad82a
+https://github.com/Mehrad82a
 
 ---
 

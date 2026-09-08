@@ -126,7 +126,7 @@ p03_direct_exchange_routing_by_key/
 ## 1. Clone the repository
 
 ```bash
-git clone https://github.com/Mohamad82a/RabbitMQ-Senior-Developer-Roadmap.git
+git clone https://github.com/Mehrad82a/RabbitMQ-Senior-Developer-Roadmap.git
 
 cd part1_rabbitmq_fundamentals/p03_direct_exchange_routing_by_key
 ```
@@ -533,11 +533,11 @@ Learn how to route messages using **wildcard routing keys**, allowing consumers 
 
 # 📝 Author
 
-**Mohamad Abbasi**
+**Mehrad Abbasi**
 
 GitHub:
 
-https://github.com/Mohamad82a
+https://github.com/Mehrad82a
 
 ---
 
