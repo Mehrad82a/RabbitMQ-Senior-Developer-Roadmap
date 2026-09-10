@@ -1,5 +1,19 @@
 # Environment files
 .env
 .env.*
-.idea
 !.env.example
+
+
+# Restored Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+
+# Restored tool caches and IDE folders
+.pytest_cache
+.mypy_cache
+.idea
+.vscode
