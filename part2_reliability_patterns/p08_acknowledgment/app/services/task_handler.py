@@ -1,8 +1,6 @@
 import time
 from collections.abc import Mapping
 
-from Scripts.mailodf import result
-
 from app.core.logger import logger
 from app.services.exceptions import TransientProcessingError, PermanentProcessingError
 from app.services.outcomes import ProcessingOutcome
@@ -27,8 +25,8 @@ class TaskHandler:
         if not handler_name.strip():
             raise ValueError('Handler name cannot be empty')
 
-        if not processing_seconds:
-            raise ValueError('Processing seconds cannot be empty')
+        if processing_seconds < 0:
+            raise ValueError('Processing seconds cannot be negative')
 
         self._handler_name = handler_name.strip()
         self._processing_seconds = processing_seconds
@@ -42,7 +40,7 @@ class TaskHandler:
 
         logger.info(
             f'[{self._handler_name}] Processing task: <{task_id}> | '
-            f'task_name:<{task_name}> | processing_outcome=<{outcome}>'
+            f'task_name:<{task_name}> | processing_outcome=<{outcome.value}>'
         )
 
         # Simulate real work
