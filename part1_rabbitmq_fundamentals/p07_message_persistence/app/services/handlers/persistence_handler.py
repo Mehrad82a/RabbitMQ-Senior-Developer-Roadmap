@@ -16,7 +16,7 @@ class PersistenceHandler:
 
         self._handler_name = handler_name.strip()
 
-    def process(self, message:Mapping[str, object]) -> dict[str, object]:
+    def process(self, message: Mapping[str, object]) -> dict[str, object]:
         message_id = self._get_required_string(message, field_name='message_id')
         content = self._get_required_string(message, field_name='content')
         queue_name = self._get_required_string(message, field_name='queue_name')
