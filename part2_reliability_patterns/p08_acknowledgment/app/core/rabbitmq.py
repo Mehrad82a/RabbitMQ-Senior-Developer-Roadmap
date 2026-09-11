@@ -6,6 +6,8 @@ from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 
+
+
 class RabbitMQConnectionError(Exception):
     """
     Raised when a usable RabbitMQ connection cannot be established.

@@ -28,7 +28,7 @@ class TaskHandler:
         if processing_seconds < 0:
             raise ValueError('Processing seconds cannot be negative')
 
-        self._handler_name = handler_name.strip()
+        self._handler_name = f'{handler_name.strip()} Handler'
         self._processing_seconds = processing_seconds
 
 
