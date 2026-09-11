@@ -2,7 +2,16 @@ import pika
 import time
 
 from app.core.config import settings
-from app.core.logger import logger
+from app.core.logger import get_logger
+
+logger = get_logger(__name__)
+
+
+
+class RabbitMQConnectionError(Exception):
+    """
+    Raised when a usable RabbitMQ connection cannot be established.
+    """
 
 
 class RabbitMQConnection:
@@ -39,8 +48,6 @@ class RabbitMQConnection:
             heartbeat=settings.heartbeat,
             blocked_connection_timeout=settings.blocked_connection_timeout,
             connection_attempts=1,
-            # connection_attempts=settings.connection_attempts,
-            # retry_delay=settings.retry_delay,
             socket_timeout=settings.socket_timeout,
         )
 
@@ -56,22 +63,29 @@ class RabbitMQConnection:
 
         params = self._create_parameters()
 
-        max_attempts = 10
+        max_attempts = settings.connection_attempts
+
+        last_error: Exception | None = None
 
         for attempt in range(1, max_attempts + 1):
             try:
-                logger.info(f'Connecting to RabbitMQ (attempt {attempt}/10)')
+                logger.info(f'Connecting to RabbitMQ (attempt {attempt}/{max_attempts})')
 
                 self.connection = pika.BlockingConnection(params)
                 self.channel = self.connection.channel()
                 logger.info('Connected to RabbitMQ successfully.')
                 return self.channel
 
-            except pika.exceptions.AMQPConnectionError as e:
-                logger.warning(f'RabbitMQ connection failed: {e}')
-                time.sleep(settings.retry_delay)
+            except pika.exceptions.AMQPConnectionError as exc:
+                last_error = exc
+                logger.warning(f'RabbitMQ connection failed (attempt {attempt}/{max_attempts}): {exc}')
 
-        raise RuntimeError(f'Failed to connect to RabbitMQ after {max_attempts} attempts')
+                if attempt < max_attempts:
+                    time.sleep(settings.retry_delay)
+
+        raise RabbitMQConnectionError(
+            f'Failed to connect to RabbitMQ after {max_attempts} attempts'
+        ) from last_error
 
 
     def close(self):

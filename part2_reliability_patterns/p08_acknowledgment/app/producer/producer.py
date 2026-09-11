@@ -60,7 +60,8 @@ class Producer:
                     ),
                 )
 
-                logger.info(f'Task published successfully: task_id=<{task_id}> | queue=<{queue_name}>')
+
+            logger.info(f'Task published successfully: task_id=<{task_id}> | queue=<{queue_name}>')
 
 
         except pika.exceptions.AMQPError as exc:
@@ -128,10 +129,10 @@ class Producer:
     def _get_task_id(task: Mapping[str, object]) -> str:
         task_id = task.get('task_id')
 
-        if task_id is None:
+        if task_id is None or str(task_id).strip():
             raise ValueError('Task must contain a non-empty "task_id"')
 
-        return str(task_id)
+        return str(task_id).strip()
 
 
 
