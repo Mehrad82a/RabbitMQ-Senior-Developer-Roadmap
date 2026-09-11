@@ -27,7 +27,7 @@ class TaskService:
         self._producer = producer or Producer()
 
 
-    def send_test(self, *, mode: str, task_name: str, processing_outcome: ProcessingOutcome) -> dict[str, object]:
+    def send_task(self, *, mode: str, task_name: str, processing_outcome: ProcessingOutcome) -> dict[str, object]:
         queue_name = self._resolve_queue_name(mode)
 
         task = self._build_task(
@@ -53,7 +53,7 @@ class TaskService:
         return {
             **task,
             'mode': mode,
-            'queue': queue_name,
+            'queue_name': queue_name,
             'status': 'queued',
         }
 
