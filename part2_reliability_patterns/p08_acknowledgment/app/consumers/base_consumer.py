@@ -14,6 +14,20 @@ logger = get_logger(__name__)
 
 
 class BaseConsumer(ABC):
+    """
+    Shared consuming pipeline for the acknowledgement experiment.
+
+    Both consumers of this day receive the same payload, run the same handler,
+    and classify the result the same way. The only thing that differs is what
+    they tell the broker afterwards, so this class owns the whole pipeline and
+    delegates *only* the acknowledgement decision to its subclasses:
+
+        deserialize -> handler.process() -> classify -> acknowledgement hook
+
+    Subclasses must declare AUTO_ACK and implement the three hooks. Keeping the
+    pipeline here is what makes the auto-ack vs manual-ack comparison fair: any
+    behavioural difference observed at runtime comes from the ack mode alone.
+    """
 
     AUTO_ACK: bool
     DEFAULT_PREFETCH_COUNT = 1
