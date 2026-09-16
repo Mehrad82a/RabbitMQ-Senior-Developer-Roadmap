@@ -129,7 +129,7 @@ class Producer:
     def _get_task_id(task: Mapping[str, object]) -> str:
         task_id = task.get('task_id')
 
-        if task_id is None or str(task_id).strip():
+        if task_id is None or not str(task_id).strip():
             raise ValueError('Task must contain a non-empty "task_id"')
 
         return str(task_id).strip()
