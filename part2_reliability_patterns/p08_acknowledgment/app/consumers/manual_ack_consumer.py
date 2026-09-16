@@ -49,7 +49,7 @@ class ManualAckConsumer(BaseConsumer):
             prefetch_count: int | None = None,
     ) -> None:
         super().__init__(
-            queue_name=queue_name or settings.auto_ack_queue,
+            queue_name=queue_name or settings.manual_ack_queue,
             handler=handler,
             rabbitmq=rabbitmq,
             prefetch_count=prefetch_count
