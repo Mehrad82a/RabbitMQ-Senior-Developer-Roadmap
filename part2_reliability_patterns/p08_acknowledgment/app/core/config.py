@@ -1,5 +1,12 @@
+from typing import Literal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
+
+
+
+
+ConsumerMode = Literal['auto', 'manual']
 
 
 class Settings(BaseSettings):
@@ -34,7 +41,7 @@ class Settings(BaseSettings):
     # =========================================
     # Worker
     # =========================================
-    consumer_mode: str = Field(default='manual', alias='CONSUMER_MODE')
+    consumer_mode: ConsumerMode = Field(default='manual', alias='CONSUMER_MODE')
 
 
     # =========================================
