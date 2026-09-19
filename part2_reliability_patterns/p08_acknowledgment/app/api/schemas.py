@@ -21,7 +21,6 @@ class TaskRequest(BaseModel):
             'examples': [
                 {
                     'task_name': 'generate_invoice',
-                    'processing_outcome': 'transient_failure',
                     'mode': 'manual',
                 }
             ]
@@ -32,11 +31,6 @@ class TaskRequest(BaseModel):
         min_length=1,
         max_length=200,
         description='The name of the task to publish.',
-    )
-
-    processing_outcome: ProcessingOutcome = Field(
-        default=ProcessingOutcome.SUCCESS,
-        description='Outcome the consumer should simulate while processing.',
     )
 
     mode: AckMode = Field(
@@ -64,7 +58,6 @@ class TaskResponse(BaseModel):
 
     task_id: str
     task_name: str
-    processing_outcome: ProcessingOutcome
     created_at: str
     mode: AckMode
     queue_name: str
