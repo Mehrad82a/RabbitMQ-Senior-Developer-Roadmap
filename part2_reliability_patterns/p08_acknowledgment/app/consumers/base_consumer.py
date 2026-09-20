@@ -24,33 +24,40 @@ class BaseConsumer(ABC):
 
         deserialize -> handler.process() -> classify -> acknowledgement hook
 
-    Subclasses must declare AUTO_ACK and implement the three hooks. Keeping the
-    pipeline here is what makes the auto-ack vs manual-ack comparison fair: any
-    behavioural difference observed at runtime comes from the ack mode alone.
+    Subclasses must declare AUTO_ACK and DEFAULT_QUEUE_NAME, then implement
+    the three acknowledgment hooks. Keeping the pipeline here is what makes
+    the auto-ack vs manual-ack comparison fair: any behavioural difference
+    observed at runtime comes from the ack mode alone.
     """
 
     AUTO_ACK: bool
+    DEFAULT_QUEUE_NAME: str
     DEFAULT_PREFETCH_COUNT = 1
 
     def __init__(
             self,
             *,
-            queue_name: str,
+            queue_name: str | None = None,
             handler: TaskHandler | None = None,
             rabbitmq: RabbitMQConnection | None = None,
             prefetch_count: int | None = None,
     ) -> None:
 
-        if not queue_name or not queue_name.strip():
-            raise ValueError('Queue name cannot be empty')
+        resolved_queue_name = (
+            queue_name if queue_name is not None else self.DEFAULT_QUEUE_NAME
+        )
+
+        if not isinstance(resolved_queue_name, str) or not resolved_queue_name.strip():
+            raise ValueError('Queue name must be a non-empty string')
+
 
         if prefetch_count is not None and prefetch_count < 0:
             raise ValueError('Prefetch count cannot be negative')
 
 
-        self._queue_name = queue_name.strip()
-        self._handler = handler or TaskHandler(handler_name=self.consumer_name)
-        self._rabbitmq = rabbitmq or RabbitMQConnection()
+        self._queue_name = resolved_queue_name.strip()
+        self._handler = handler if handler is not None else TaskHandler(handler_name=self.consumer_name)
+        self._rabbitmq = rabbitmq if rabbitmq is not None else RabbitMQConnection()
         self._prefetch_count = self.DEFAULT_PREFETCH_COUNT if prefetch_count is None else prefetch_count
         self._channel: pika.adapters.blocking_connection.BlockingChannel | None = None
 

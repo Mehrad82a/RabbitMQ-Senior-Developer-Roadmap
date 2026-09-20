@@ -19,8 +19,7 @@ import pika
 from app.core.config import settings
 from app.core.logger import get_logger
 from app.consumers.base_consumer import BaseConsumer
-from app.core.rabbitmq import RabbitMQConnection
-from app.services.task_handler import TaskHandler
+
 
 
 logger = get_logger(__name__)
@@ -29,33 +28,13 @@ logger = get_logger(__name__)
 class AutoAckConsumer(BaseConsumer):
 
     AUTO_ACK = True
-
-    def __init__(
-            self,
-            *,
-            queue_name: str,
-            handler: TaskHandler | None = None,
-            rabbitmq: RabbitMQConnection | None = None,
-            prefetch_count: int | None = None,
-    ) -> None:
-
-        super().__init__(
-            queue_name=queue_name or settings.auto_ack_queue,
-            handler=handler,
-            rabbitmq=rabbitmq,
-            prefetch_count=prefetch_count
-        )
+    DEFAULT_QUEUE_NAME = settings.auto_ack_queue
 
 
 
     # =========================================
     # Acknowledgement hooks
     # =========================================
-    """
-    Every hook is deliberately a no-op. Calling basic_ack / basic_nack here
-    would raise a channel error, because the delivery_tag was already settled
-    by the broker when it sent the message.
-    """
     def _on_success(
         self,
         channel: pika.adapters.blocking_connection.BlockingChannel,
@@ -63,6 +42,13 @@ class AutoAckConsumer(BaseConsumer):
         *,
         task_id: str,
     ) -> None:
+        """
+        Log successful processing.
+
+        No acknowledgment is sent because RabbitMQ already considered the
+        message acknowledged when it delivered it to this consumer.
+        """
+
         logger.info(
             f'[{self.consumer_name}] Task finished: task_id={task_id} | '
             f'delivery_tag=<{method.delivery_tag}> | '
@@ -71,10 +57,7 @@ class AutoAckConsumer(BaseConsumer):
 
 
 
-    """
-    The retryable case is where auto ack hurts most: the failure is
-    recoverable, but the message no longer exists to be retried.
-    """
+
     def _on_transient_failure(
         self,
         channel: pika.adapters.blocking_connection.BlockingChannel,
@@ -82,6 +65,13 @@ class AutoAckConsumer(BaseConsumer):
         *,
         task_id: str,
     ) -> None:
+        """
+        Log that a retryable message was lost.
+
+        Requeueing is impossible because RabbitMQ has already removed the
+        message from the queue.
+        """
+
         logger.error(
             f'[{self.consumer_name}] Task lost after a retryable failure: '
             f'task_id=<{task_id}> | delivery_tag=<{method.delivery_tag}> | '
@@ -89,11 +79,6 @@ class AutoAckConsumer(BaseConsumer):
         )
 
 
-
-    """
-    Dropping the message happens to be the right outcome here, but it is
-    luck rather than a decision: the broker discarded it either way.
-    """
     def _on_permanent_failure(
         self,
         channel: pika.adapters.blocking_connection.BlockingChannel,
@@ -101,6 +86,14 @@ class AutoAckConsumer(BaseConsumer):
         *,
         task_id: str,
     ) -> None:
+        """
+        Log that a permanently failing message was already discarded.
+
+        Dropping the message is appropriate for a permanent failure, but with
+        auto-ack this was RabbitMQ's automatic behavior rather than an explicit
+        consumer decision.
+        """
+
         logger.error(
             f'[{self.consumer_name}] Task dropped after a permanent failure: '
             f'task_id=<{task_id}> | delivery_tag=<{method.delivery_tag}> | '

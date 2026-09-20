@@ -29,8 +29,7 @@ import pika
 from app.core.config import settings
 from app.core.logger import get_logger
 from app.consumers.base_consumer import BaseConsumer
-from app.core.rabbitmq import RabbitMQConnection
-from app.services.task_handler import TaskHandler
+
 
 
 logger = get_logger(__name__)
@@ -39,22 +38,7 @@ logger = get_logger(__name__)
 class ManualAckConsumer(BaseConsumer):
 
     AUTO_ACK = False
-
-    def __init__(
-            self,
-            *,
-            queue_name: str,
-            handler: TaskHandler | None = None,
-            rabbitmq: RabbitMQConnection | None = None,
-            prefetch_count: int | None = None,
-    ) -> None:
-        super().__init__(
-            queue_name=queue_name or settings.manual_ack_queue,
-            handler=handler,
-            rabbitmq=rabbitmq,
-            prefetch_count=prefetch_count
-        )
-
+    DEFAULT_QUEUE_NAME = settings.manual_ack_queue
 
 
     # =========================================
@@ -67,6 +51,9 @@ class ManualAckConsumer(BaseConsumer):
         *,
         task_id: str,
     ) -> None:
+        """
+        Acknowledge the message only after successful business processing.
+        """
 
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -84,6 +71,13 @@ class ManualAckConsumer(BaseConsumer):
         *,
         task_id: str,
     ) -> None:
+
+        """
+        Requeue the first failed delivery and reject the second one.
+
+        Rejecting an already redelivered message prevents an infinite
+        requeue loop.
+        """
 
         if method.redelivered:
             channel.basic_reject(
@@ -119,6 +113,10 @@ class ManualAckConsumer(BaseConsumer):
         *,
         task_id: str,
     ) -> None:
+
+        """
+        Reject a permanently unprocessable message without requeueing it.
+        """
 
         channel.basic_reject(
             delivery_tag=method.delivery_tag,

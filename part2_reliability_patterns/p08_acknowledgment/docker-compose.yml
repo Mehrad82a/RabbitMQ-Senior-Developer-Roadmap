@@ -47,17 +47,38 @@ services:
 
 
 
-  worker:
+  auto_ack_worker:
     build:
       context: .
-    container_name: ${WORKER_CONTAINER_NAME}
+    container_name: ${AUTO_ACK_WORKER_CONTAINER_NAME}
+
+    environment:
+      CONSUMER_MODE: auto
 
     depends_on:
       rabbitmq:
         condition: service_healthy
 
+    command: python -m app.worker
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
+
+  manual_ack_worker:
+    build:
+      context: .
+    container_name: ${MANUAL_ACK_WORKER_CONTAINER_NAME}
+
     environment:
-      HANDLER_NAME: ${HANDLER_NAME}
+      CONSUMER_MODE: manual
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
     command: python -m app.worker
     restart: unless-stopped
