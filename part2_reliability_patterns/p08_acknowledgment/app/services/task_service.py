@@ -6,7 +6,6 @@ from app.core.config import settings
 from app.core.logger import logger
 from app.producer.producer import Producer, ProducerPublishError
 from app.services.exceptions import TaskPublishError
-from app.services.outcomes import ProcessingOutcome
 
 
 
@@ -27,12 +26,11 @@ class TaskService:
         self._producer = producer or Producer()
 
 
-    def send_task(self, *, mode: str, task_name: str, processing_outcome: ProcessingOutcome) -> dict[str, object]:
+    def send_task(self, *, mode: str, task_name: str) -> dict[str, object]:
         queue_name = self._resolve_queue_name(mode)
 
         task = self._build_task(
             task_name=task_name,
-            processing_outcome=processing_outcome
         )
 
         try:
@@ -73,7 +71,7 @@ class TaskService:
 
 
     @staticmethod
-    def _build_task(*, task_name: str, processing_outcome: ProcessingOutcome) -> dict[str, object]:
+    def _build_task(*, task_name: str) -> dict[str, object]:
         cleaned_task_name = task_name.strip()
 
         if not cleaned_task_name:
@@ -82,7 +80,6 @@ class TaskService:
         return {
             'task_id':  str(uuid4()),
             'task_name': cleaned_task_name,
-            'processing_outcome': ProcessingOutcome(processing_outcome).value,
             'created_at': datetime.now(timezone.utc).isoformat(),
         }
 

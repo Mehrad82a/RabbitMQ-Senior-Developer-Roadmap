@@ -1,71 +1,87 @@
-import time
 from collections.abc import Mapping
 
-from app.core.logger import logger
-from app.services.exceptions import TransientProcessingError, PermanentProcessingError
-from app.services.outcomes import ProcessingOutcome
+from app.core.logger import get_logger
+from app.services.contracts import TaskProcessor
+from app.services.exceptions import (
+    InvalidTaskError,
+    PermanentProcessingError,
+    TransientProcessingError,
+)
+
+from app.services.task_processor import DefaultTaskProcessor
 
 
 
-
+logger = get_logger(__name__)
 
 
 class TaskHandler:
     """
-    Simulates the business logic a consumer runs before acknowledging.
+    Coordinates task processing and translates processor exceptions into
+    failures understood by RabbitMQ consumers.
 
-    Failure taxonomy exposed to consumers:
-        SUCCESS            -> returns a result dict
-        TRANSIENT_FAILURE  -> TransientProcessingError (retryable)
-        PERMANENT_FAILURE  -> PermanentProcessingError (not retryable)
-        invalid payload    -> PermanentProcessingError (poison message)
+    Exception mapping:
+
+        successful processing
+            -> return result
+
+        InvalidTaskError
+            -> PermanentProcessingError
+
+        TimeoutError or ConnectionError
+            -> TransientProcessingError
+
+        PermanentProcessingError
+            -> propagate unchanged
+
+        TransientProcessingError
+            -> propagate unchanged
     """
 
-    def __init__(self, handler_name: str = 'TaskHandler', processing_seconds: float = 1.0) -> None:
+    def __init__(
+            self,
+            *,
+            processor: TaskProcessor | None = None,
+            handler_name: str = 'TaskHandler'
+    ) -> None:
         if not handler_name.strip():
             raise ValueError('Handler name cannot be empty')
 
-        if processing_seconds < 0:
-            raise ValueError('Processing seconds cannot be negative')
-
         self._handler_name = f'{handler_name.strip()} Handler'
-        self._processing_seconds = processing_seconds
-
+        self._processor = processor if processor is not None else DefaultTaskProcessor()
 
 
     def process(self, task: Mapping[str, object]) -> dict[str, object]:
-        task_id = self._get_required_string(task, field_name='task_id')
-        task_name = self._get_required_string(task, field_name='task_name')
-        outcome = self._get_outcome(task)
+        task_id = self._get_context_value(task, field_name='task_id')
+        task_name = self._get_context_value(task, field_name='task_name')
 
         logger.info(
-            f'[{self._handler_name}] Processing task: <{task_id}> | '
-            f'task_name:<{task_name}> | processing_outcome=<{outcome.value}>'
+            f'[{self._handler_name}] Processing task: '
+            f'task_id: <{task_id}> | '
+            f'task_name:<{task_name}>'
         )
 
-        # Simulate real work
-        time.sleep(self._processing_seconds)
+        try:
+            result = self._processor.execute(task)
 
-
-        if outcome is ProcessingOutcome.TRANSIENT_FAILURE:
-            raise TransientProcessingError(
-                f'[{self._handler_name}] Temporary processing failure for task <{task_id}>'
-            )
-
-
-        if outcome is ProcessingOutcome.PERMANENT_FAILURE:
+        except InvalidTaskError as exc:
             raise PermanentProcessingError(
-                f'[{self._handler_name}] Permanent processing failure for task <{task_id}>'
-            )
+                f'Task <{task_id}> contains invalid data.'
+            ) from exc
 
 
-        result = {
-            'task_id': task_id,
-            'task_name': task_name,
-            'processing_outcome': outcome.value,
-            'handler': self._handler_name,
-            'status': 'processed',
-        }
+        except (TimeoutError, ConnectionError) as exc:
+            raise TransientProcessingError(
+                f'Temporary processing failure for task <{task_id}>.'
+            ) from exc
+
+
+        except TransientProcessingError:
+            raise
+
+        except PermanentProcessingError:
+            raise
+
 
         logger.info(f'[{self._handler_name}] Finished processing task: <{task_id}>')
 
@@ -74,35 +90,25 @@ class TaskHandler:
 
 
 
-
-
     @staticmethod
-    def _get_required_string(
-        task: Mapping[str, object], *, field_name: str) -> str:
+    def _get_context_value(
+            task: Mapping[str, object],
+            *,
+            field_name: str,
+    ) -> str:
+        """
+        Return a safe value for logging without performing business validation.
+        """
+
         value = task.get(field_name)
 
-        if not isinstance(value, str) or not value.strip():
-            raise PermanentProcessingError(
-                f'Task must contain a valid {field_name}.'
-            )
+        if isinstance(value, str) and value.strip():
+            return value.strip()
 
-        return value.strip()
+        return 'unknown'
 
 
 
-
-    @classmethod
-    def _get_outcome(cls, task: Mapping[str, object]) -> ProcessingOutcome:
-        raw_outcome = cls._get_required_string(task, field_name='processing_outcome')
-
-        try:
-            return ProcessingOutcome(raw_outcome)
-
-
-        except ValueError as exc:
-            raise PermanentProcessingError(
-                f'Unsupported processing_outcome: <{raw_outcome}>.'
-            ) from exc
 
 
 
