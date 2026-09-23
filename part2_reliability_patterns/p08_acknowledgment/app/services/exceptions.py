@@ -1,3 +1,9 @@
+class InvalidTaskError(Exception):
+    """
+    Raised when task data violates a business rule or is incomplete.
+    """
+
+
 class TransientProcessingError(Exception):
     """
     Raised when a task fails temporarily.
@@ -13,4 +19,6 @@ class PermanentProcessingError(Exception):
 
 
 class TaskPublishError(Exception):
-    """Raised when a task cannot be handed over to RabbitMQ."""
+    """
+    Raised when a task cannot be handed over to RabbitMQ.
+    """
