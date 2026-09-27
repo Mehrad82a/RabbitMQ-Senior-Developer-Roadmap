@@ -17,7 +17,7 @@ from tests.fakes.task_processors import (
 
 
 @pytest.fixture
-def task_factory() -> Callable[..., dict[str, object]]
+def task_factory() -> Callable[..., dict[str, object]]:
     """
     Build a valid task payload with optional field overrides.
     """
