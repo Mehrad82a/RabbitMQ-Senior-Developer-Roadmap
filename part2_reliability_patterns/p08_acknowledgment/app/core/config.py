@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     # =========================================
     consumer_mode: ConsumerMode = Field(default='manual', alias='CONSUMER_MODE')
 
+    # =========================================
+    # Test RabbitMQ
+    # =========================================
+    rabbitmq_test_host: str = Field(default='localhost', alias='RABBITMQ_TEST_HOST')
+    rabbitmq_test_port: int = Field(default=5672, alias='RABBITMQ_TEST_PORT')
 
     # =========================================
     # Pydantic Settings

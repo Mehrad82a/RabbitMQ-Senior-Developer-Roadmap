@@ -35,6 +35,13 @@ def task_factory() -> Callable[..., dict[str, object]]:
 
 
 @pytest.fixture
+def queue_name(request: pytest.FixtureRequest) -> str:
+    scenario_name = request.node.name.strip().lower().replace('_', '-')
+
+    return f'p08.test.{scenario_name}.{uuid4()}'
+
+
+@pytest.fixture
 def successful_processor() -> SuccessfulTaskProcessor:
     """
     Return a processor that completes successfully.
