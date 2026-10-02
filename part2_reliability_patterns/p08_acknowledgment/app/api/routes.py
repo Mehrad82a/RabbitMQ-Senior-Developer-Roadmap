@@ -44,7 +44,6 @@ def publish_task(payload: TaskRequest, task_service: TaskService = Depends(get_t
         result = task_service.send_task(
             mode=payload.mode,
             task_name=payload.task_name,
-            processing_outcome=payload.processing_outcome.value,
         )
 
 

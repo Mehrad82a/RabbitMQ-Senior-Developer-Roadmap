@@ -41,7 +41,7 @@ class DefaultTaskProcessor:
 
 
     @staticmethod
-    def _get_required_string(task: Mapping[str, object], *, field_name: str):
+    def _get_required_string(task: Mapping[str, object], *, field_name: str) -> str:
         value = task.get(field_name)
 
         if not isinstance(value, str) or not value.strip():
