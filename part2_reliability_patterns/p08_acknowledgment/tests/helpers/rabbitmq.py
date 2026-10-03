@@ -54,8 +54,8 @@ class RabbitMQTestClient:
             port: int | None = None,
     ) -> None:
 
-        self._host = host or settings.test_rabbitmq_host
-        self._port = port or settings.test_rabbitmq_port
+        self._host = host or settings.rabbitmq_test_host
+        self._port = port or settings.rabbitmq_test_port
         self._connection: pika.BlockingConnection | None = None
         self._channel: BlockingChannel | None = None
 
