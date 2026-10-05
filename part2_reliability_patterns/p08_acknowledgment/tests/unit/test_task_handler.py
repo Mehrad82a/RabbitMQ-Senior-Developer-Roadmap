@@ -29,7 +29,6 @@ Note:
 """
 
 from collections.abc import Callable, Mapping
-import py
 import pytest
 
 from app.services.contracts import TaskProcessor
@@ -44,8 +43,6 @@ from tests.fakes.task_processors import (
     SuccessfulTaskProcessor,
     TemporarilyFailingTaskProcessor,
 )
-
-from app.core.logger import handler
 
 
 class RaisingTaskProcessor:
