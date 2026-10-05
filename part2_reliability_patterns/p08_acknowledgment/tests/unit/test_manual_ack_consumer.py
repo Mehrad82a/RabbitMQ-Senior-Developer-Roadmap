@@ -219,13 +219,13 @@ def test_redelivered_transient_failure_is_rejected(
 
 
 def test_permanent_failure_is_rejected_without_requeue(
-        task_factory: Callable[..., dict[str, object]],
-        message_body_factory: Callable[[Mapping[str, object]], bytes],
-        delivery_method_factory: Callable[..., pika.spec.Basic.Deliver],
-        message_properties: pika.BasicProperties,
-        channel_mock: MagicMock,
-        permanent_processor: PermanentlyFailingTaskProcessor,
-        handler_factory: Callable[[TaskProcessor], TaskHandler],
+    task_factory: Callable[..., dict[str, object]],
+    message_body_factory: Callable[[Mapping[str, object]], bytes],
+    delivery_method_factory: Callable[..., pika.spec.Basic.Deliver],
+    message_properties: pika.BasicProperties,
+    channel_mock: MagicMock,
+    permanent_processor: PermanentlyFailingTaskProcessor,
+    handler_factory: Callable[[TaskProcessor], TaskHandler],
 ) -> None:
 
     task = task_factory()
