@@ -1662,20 +1662,30 @@ File:
 tests/scenarios/test_publisher_confirm.py
 ```
 
-Publisher Confirm answers this question:
+This integration test connects to a real RabbitMQ broker and verifies the Producer's behavior with Publisher Confirms enabled and disabled.
 
-```text
-Did RabbitMQ accept responsibility for the Publish?
+## Scenarios
+
+| Publisher Confirm | Expected Producer Result | Message Published |
+|---|---|---|
+| Enabled (`True`) | `True` | Yes |
+| Disabled (`False`) | `None` | Yes |
+
+When Publisher Confirms are enabled, the Producer waits for RabbitMQ to confirm that it accepted the publish. The Producer returns `True` after a successful confirmation.
+
+When Publisher Confirms are disabled, the Producer does not wait for a broker confirmation and returns `None`. The message is still published to the target queue.
+
+A Publisher Confirm verifies broker acceptance. It does not confirm that a Consumer processed the message or that the message will survive a RabbitMQ restart. Those behaviors are tested separately.
+
+## Run This Test
+
+Run the command from the P07 project directory:
+
+```bash
+pytest tests/scenarios/test_publisher_confirm.py -v -s
 ```
 
-It does not answer:
-
-```text
-Did the Message survive a restart?
-Did a Consumer process the Message?
-```
-
-Publisher Confirm behavior should therefore be tested separately from Broker recovery.
+The test creates a unique queue and deletes it after each scenario.
 
 ---
 

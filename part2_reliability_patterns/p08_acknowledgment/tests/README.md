@@ -1,4 +1,4 @@
-# P08 Tests
+# P08 Test Suite
 
 This directory contains the unit and integration tests for P08. The tests examine RabbitMQ acknowledgment behavior and the differences between automatic and manual acknowledgments.
 
