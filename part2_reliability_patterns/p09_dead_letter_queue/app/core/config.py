@@ -5,7 +5,7 @@ from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-PROJECT_DIR = Path(__file__).resolve().parent[2]
+PROJECT_DIR = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
