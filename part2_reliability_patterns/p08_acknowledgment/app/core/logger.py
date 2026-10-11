@@ -20,4 +20,4 @@ def get_logger(name: str) -> logging.Logger:
     return module_logger
 
 
-logger = get_logger('p08')
+logger = get_logger('P08')
