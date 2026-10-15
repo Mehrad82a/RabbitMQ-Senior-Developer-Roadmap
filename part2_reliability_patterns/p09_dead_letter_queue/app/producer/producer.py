@@ -8,8 +8,6 @@ from app.core.logger import get_logger
 from app.core.rabbitmq import RabbitMQConnection, RabbitMQConnectionError
 from app.core.topology import RabbitMQTopology
 
-from app.producer.producer import exchange_type
-
 logger = get_logger(__name__)
 
 
@@ -60,7 +58,7 @@ class Producer:
             channel.confirm_delivery()
 
             channel.basic_publish(
-                exchange_type=self._settings.task_exchange,
+                exchange=self._settings.task_exchange,
                 routing_key=self._settings.task_routing_key,
                 body=body,
                 properties=pika.BasicProperties(

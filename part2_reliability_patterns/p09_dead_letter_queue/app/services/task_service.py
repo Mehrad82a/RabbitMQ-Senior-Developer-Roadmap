@@ -24,7 +24,7 @@ class TaskService:
     ) -> None:
 
         self._settings = config if config is not None else settings
-        self._producer = producer if producer is None else Producer(config=self._settings)
+        self._producer = producer if producer is not None else Producer(config=self._settings)
 
 
 
@@ -32,7 +32,7 @@ class TaskService:
         task = self._build_task(task_name=task_name)
 
         try:
-            self._producer.publish(task)
+            self._producer.publish(task=task)
 
         except ProducerPublishError as exc:
             raise TaskPublishError(
@@ -61,8 +61,11 @@ class TaskService:
         if not cleaned_name:
             raise ValueError('Task Name cannot be empty')
 
+
         return {
             'task_id': str(uuid4()),
             'task_name': cleaned_name,
             'created_at': datetime.now(timezone.utc).isoformat(),
         }
+
+

@@ -38,3 +38,6 @@ app.include_router(router)
 def health() -> dict[str, str]:
     return {'status': 'ok'}
 
+
+
+
