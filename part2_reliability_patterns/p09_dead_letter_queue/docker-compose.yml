@@ -1,0 +1,109 @@
+
+services:
+  rabbitmq:
+#    image: rabbitmq:4-management
+    image: docker.arvancloud.ir/rabbitmq:4-management
+    container_name: ${RABBITMQ_CONTAINER_NAME}
+
+    hostname: rabbitmq
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/}
+
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          rabbitmq-diagnostics -q check_running &&
+          rabbitmq-diagnostics -q check_port_connectivity
+
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+    restart: unless-stopped
+
+
+  rabbitmq_setup:
+#    image: rabbitmq:4-management
+    image: docker.arvancloud.ir/rabbitmq:4-management
+
+    user: rabbitmq
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+    entrypoint:
+      - rabbitmqctl
+
+    command: --node rabbit@rabbitmq import_definitions /etc/rabbitmq/definitions.json
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq:ro
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+
+    restart: "no"
+
+
+  fastapi:
+    build:
+      context: .
+    container_name: ${FASTAPI_CONTAINER_NAME}
+
+    ports:
+      - "8000:8000"
+
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload  # Development
+#    command: uvicorn app.main:app --host 0.0.0.0 --port 8000           # Production
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+      rabbitmq_setup:
+        condition: service_completed_successfully
+
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
+
+  worker:
+    build:
+      context: .
+    container_name: ${WORKER_CONTAINER_NAME}
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+      rabbitmq_setup:
+        condition: service_completed_successfully
+
+    command: python -m app.worker
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+
+
+
+volumes:
+  rabbitmq_data:

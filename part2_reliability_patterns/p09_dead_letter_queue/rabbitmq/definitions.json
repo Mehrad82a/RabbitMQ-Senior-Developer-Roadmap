@@ -1,0 +1,20 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "tasks-dead-letter-policy",
+      "pattern": "^tasks\\.queue$",
+      "apply-to": "queues",
+      "definition": {
+        "dead-letter-exchange": "tasks.dlx",
+        "dead-letter-routing-key": "tasks.failed"
+      },
+      "priority": 10
+    }
+  ]
+}
