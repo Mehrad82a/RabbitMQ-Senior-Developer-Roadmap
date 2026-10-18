@@ -21,7 +21,12 @@ class TemporaryFailingTaskProcessor:
     """A processor fake that simulates a temporary external failure."""
 
     def execute(self, task: Mapping[str, object]) -> dict[str, object]:
-        raise TimeoutError('The external service timed out.')
+        task_id = task.get('task_id', 'unknown')
+
+        raise TimeoutError(
+            f'Temporary dependency failure for task <{task_id}>.'
+            f'The external service timed out.'
+        )
 
 
 
@@ -30,4 +35,9 @@ class PermanentlyFailingTaskProcessor:
     """A processor fake that simulates an unrecoverable business failure."""
 
     def execute(self, task: Mapping[str, object]) -> dict[str, object]:
-        raise InvalidTaskError('The task cannot be processed.')
+        task_id = task.get('task_id', 'unknown')
+
+        raise InvalidTaskError(
+            f'Task <{task_id}> violates a business rule.'
+            f'The task cannot be processed.'
+        )
