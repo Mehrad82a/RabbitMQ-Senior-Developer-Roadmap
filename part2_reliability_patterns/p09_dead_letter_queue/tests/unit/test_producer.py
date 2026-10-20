@@ -66,7 +66,7 @@ def test_publish_declares_topology_and_publishes_persistent_task(
     assert publish_kwargs['mandatory'] is True
     assert publish_kwargs['body'] == (
         b'{"task_id":"task-123","task_name":"generate-report",'
-        b'"created_at":"2026-10-18T10:00:00+00:00"}'
+        b'"created_at":"2026-10-17T10:00:00+00:00"}'
     )
 
     properties = publish_kwargs['properties']
