@@ -59,7 +59,7 @@ class TaskService:
         cleaned_name = task_name.strip()
 
         if not cleaned_name:
-            raise ValueError('Task Name cannot be empty')
+            raise ValueError('Task name cannot be empty')
 
 
         return {
