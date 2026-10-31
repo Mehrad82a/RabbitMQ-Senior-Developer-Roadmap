@@ -47,8 +47,6 @@ def test_expired_message_is_dead_lettered(
 
         assert dead_body == body
 
-        assert dead_body == body
-
         x_death = rabbitmq_client.get_x_death(dead_properties)
 
         assert x_death['reason'] == 'expired'

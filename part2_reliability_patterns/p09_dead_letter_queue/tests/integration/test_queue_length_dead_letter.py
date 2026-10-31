@@ -66,7 +66,7 @@ def test_message_dropped_by_queue_length_limit_is_dead_lettered(
 
         assert remaining_body == second_body
 
-        remaining_method.channel.basic_ack(delivery_tag=remaining_method.delivery_tag)
+        rabbitmq_client.channel.basic_ack(delivery_tag=remaining_method.delivery_tag)
 
 
     finally:

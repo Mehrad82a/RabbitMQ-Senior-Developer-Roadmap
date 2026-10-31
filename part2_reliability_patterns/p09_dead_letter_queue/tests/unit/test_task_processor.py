@@ -87,7 +87,7 @@ def test_execute_rejects_invalid_required_fields(
         **{field_name: invalid_value},
     )
 
-    processor = DefaultTaskProcessor(processing_seconds=3)
+    processor = DefaultTaskProcessor(processing_seconds=0)
 
     with pytest.raises(
         InvalidTaskError,
