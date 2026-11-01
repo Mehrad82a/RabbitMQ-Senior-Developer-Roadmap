@@ -6,6 +6,7 @@ from uuid import uuid4
 import pika
 from pika.adapters.blocking_connection import BlockingChannel
 
+from app.core.config import settings
 
 
 @dataclass(frozen=True)
@@ -20,7 +21,7 @@ class TestTopology:
 
 
 def build_test_topology() -> TestTopology:
-    prefix = f'po9.test.{uuid4().hex}'
+    prefix = f'p09.test.{uuid4().hex}'
 
     return TestTopology(
         task_exchange=f'{prefix}.exchange',
@@ -38,7 +39,15 @@ class RabbitMQTestClient:
     """RabbitMQ client used by P09 integration tests."""
 
 
-    def __init__(self) -> None:
+    def __init__(
+            self,
+            *,
+            host: str | None = None,
+            port: int | None = None,
+    ) -> None:
+
+        self._host = host or settings.rabbitmq_test_host
+        self._port = port or settings.rabbitmq_test_port
         self._connection: pika.BlockingConnection | None = None
         self._channel: BlockingChannel | None = None
 
@@ -53,18 +62,18 @@ class RabbitMQTestClient:
 
     def connect(self) -> None:
         credentials = pika.PlainCredentials(
-            os.environ['RABBITMQ_USER'],
-            os.environ['RABBITMQ_PASS'],
+            settings.rabbitmq_user,
+            settings.rabbitmq_pass,
         )
 
         parameters = pika.ConnectionParameters(
-            host=os.getenv('RABBITMQ_TEST_HOST', 'localhost'),
-            port=int(os.getenv('RABBITMQ_TEST_PORT', '5672')),
+            host=self._host,
+            port=self._port,
             virtual_host=os.getenv('RABBITMQ_VIRTUAL_HOST', '/'),
             credentials=credentials,
-            heartbeat=30,
-            blocked_connection_timeout=10,
-            socket_timeout=10,
+            heartbeat=settings.heartbeat,
+            blocked_connection_timeout=settings.blocked_connection_timeout,
+            socket_timeout=settings.socket_timeout,
         )
 
         self._connection = pika.BlockingConnection(parameters)
@@ -159,8 +168,8 @@ class RabbitMQTestClient:
 
 
         for exchange_name in (
-            topology.task_queue,
-            topology.dead_letter_queue,
+            topology.task_exchange,
+            topology.dead_letter_exchange,
         ):
             try:
                 self.channel.exchange_delete(exchange=exchange_name)

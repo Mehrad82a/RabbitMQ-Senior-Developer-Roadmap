@@ -51,7 +51,7 @@ def test_rejected_message_is_routed_to_dead_letter_queue(
     assert x_death['reason'] == 'rejected'
     assert x_death['queue'] == topology.task_queue
 
-    rabbitmq_client.channel.basic_ack(delivery_tag=method.delivery_tag)
+    rabbitmq_client.channel.basic_ack(delivery_tag=dead_method.delivery_tag)
 
 
 
