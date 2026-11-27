@@ -1,0 +1,32 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "tasks-dead-letter-policy",
+      "pattern": "^tasks\\.queue$",
+      "apply-to": "queues",
+      "definition": {
+        "dead-letter-exchange": "tasks.dlx",
+        "dead-letter-routing-key": "tasks.failed"
+      },
+      "priority": 10
+    },
+    {
+      "vhost": "/",
+      "name": "tasks-delay-policy",
+      "pattern": "^tasks\\.delay\\.queue$",
+      "apply-to": "queues",
+      "definition": {
+        "dead-letter-exchange": "tasks.exchange",
+        "dead-letter-routing-key": "tasks.process",
+        "message-ttl": 3600000
+      },
+      "priority": 10
+    }
+  ]
+}
